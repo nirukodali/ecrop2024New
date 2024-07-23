@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b> Mandal Wise Village Secretariat Aadhaar Not Updated Details </b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table style="width: 50%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							 <th> <b> S.No. </b> </th>
+                    		<th> <b> Mandal  </b> </th>
+                    		<th> <b> Village Secretariate   </b> </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="notupdatedetail ,stat: ${notupdate}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${notupdatedetail.lgdmname}"></td>
+							<td align="left" th:text="${notupdatedetail.vname}"></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</form>
+
+
+		</div>
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

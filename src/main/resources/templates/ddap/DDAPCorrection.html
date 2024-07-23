@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var ported = parseFloat(row.children[3].textContent);
+				total += ported;
+			});
+			document.getElementById('totalported').textContent = total;
+		});
+	</script>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b>  District Wise Kharif 2023 Social Audit Grievances  Redressed Report  </b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table style="width: 60%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th> <b> Sl.No </b> </th>
+							<th> <b> District Name </b> </th>
+							<th> <b> Farmer Name </b> </th>
+							<th> <b> Crop Name </b> </th>
+							<th> <b> Variety Name </b> </th>
+							<th> <b> Area Sown </b> </th>
+							<th> <b> Crop Sequence </b> </th>
+							<th> <b> Irrigation Source</b> </th>
+							<th> <b> Crop Pattern </b> </th>
+							<th> <b> Sown Date </b> </th>
+							<th> <b> Farming Type </b> </th>
+							<th> <b> Deleted </b> </th>
+							<th> <b> Total Corrections </b> </th>
+							<th> <b> Total Bookings </b> </th>
+							<th> <b> MAO Approved </b> </th>
+							<th> <b> MAO Rejected </b> </th>
+							<th> <b> Total MAO Processed </b> </th>
+							<th> <b> Tahsildar Approved </b> </th>
+							<th> <b> Tahsildar Rejected </b> </th>
+							<th> <b> Total Tahsildar Processed </b> </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="ddapcordeati ,stat: ${ddapcor}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${ddapcordeati.dname}"></td>
+							<td align="left" th:text="${ddapcordeati.farmername}"></td>
+							<td align="left" th:text="${ddapcordeati.crop}"></td>
+							<td align="left" th:text="${ddapcordeati.variety}"></td>
+							<td align="left" th:text="${ddapcordeati.extent}"></td>
+							<td align="left" th:text="${ddapcordeati.cropseq}"></td>
+							<td align="left" th:text="${ddapcordeati.src_irr}"></td>
+							<td align="left" th:text="${ddapcordeati.cr_pattern}"></td>
+							<td align="left" th:text="${ddapcordeati.sow_date}"></td>
+							<td align="left" th:text="${ddapcordeati.farming_type}"></td>
+							<td align="left" th:text="${ddapcordeati.vaadeleted}"></td>
+							<td align="left" th:text="${ddapcordeati.tot_corrections}"></td>
+							<td align="left" th:text="${ddapcordeati.totbookings}"></td>
+							<td align="left" th:text="${ddapcordeati.maoapproved}"></td>
+							<td align="left" th:text="${ddapcordeati.maorejected}"></td>
+							<td align="left" th:text="${ddapcordeati.maoprocessed}"></td>
+							<td align="left" th:text="${ddapcordeati.tahapproved}"></td>
+							<td align="left" th:text="${ddapcordeati.tahrejected}"></td>
+							<td align="left" th:text="${ddapcordeati.tahprocessed}"></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</form>
+
+
+		</div>
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

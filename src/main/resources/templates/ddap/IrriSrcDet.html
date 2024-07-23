@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<head th:insert="header"></head>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+
+		function CallPrint(strid) {
+			var prtContent = document.getElementById(strid);
+			var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=1,scrollbars=1,status=1,addressbar=0');
+			var is_chrome = Boolean(mywindow.chrome);
+			mywindow.document.write(prtContent.innerHTML);
+			mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+			if (is_chrome) {
+				mywindow.onload = function () { // wait until all resources loaded 
+					mywindow.focus(); // necessary for IE >= 10
+					mywindow.print(); // change window to mywindow
+					mywindow.close(); // change window to mywindow
+				};
+			} else {
+				mywindow.document.close(); // necessary for IE >= 10
+				mywindow.focus(); // necessary for IE >= 10
+				mywindow.print();
+				mywindow.close();
+			}
+
+			return true;
+		}
+
+	</script>
+	<script language="javascript">
+		var tableToExcel = (function () {
+			var uri = 'data:application/vnd.ms-excel;base64,'
+				, template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table align="center">{table}</table></body></html>'
+				, base64 = function (s) {
+					return window.btoa(unescape(encodeURIComponent(s)))
+				}
+				, format = function (s, c) {
+					return s.replace(/{(\w+)}/g, function (m, p) {
+						return c[p];
+					})
+				}
+			return function (table, name) {
+				if (!table.nodeType)
+					table = document.getElementById(table)
+				var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+				window.location.href = uri + base64(format(template, ctx))
+			}
+		})()
+	</script>
+
+</head>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			type: "get",
+			url: "./util/getAllSeason",
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				for (var j = 0; j < resp.length; j++) {
+					var bean = resp[j];
+					$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+				}
+			}
+		});
+	});
+
+	function getData() {
+
+		var cropYear = $("#cropyear").val();
+		$.ajax({
+			type: "get",
+			url: "./util/getirrsrcdet?cropyear=" + cropYear,
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				$("#databody").empty();
+
+				var sno = 0;
+				var bwf = 0,bwe = 0,lf = 0,le = 0,cf = 0,ce = 0,tf = 0,te = 0,of = 0,oe = 0,rf = 0,re = 0,a1 = 0,b1 = 0;
+
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+
+					var bean = resp[j];
+					a = bean.bwf + bean.lf + bean.cf + bean.tf + bean.of + bean.rf;
+					b = parseFloat(bean.bwe) + parseFloat(bean.le) + parseFloat(bean.ce) + parseFloat(bean.te) + parseFloat(bean.oe) + parseFloat(bean.re);
+					b = b.toFixed(2);
+					
+					
+					bwf = bwf + bean.bwf;
+					bwe = parseFloat((bwe + bean.bwe).toFixed(2));
+					lf = parseFloat((lf + bean.lf).toFixed(2));
+					le = parseFloat((le + bean.le).toFixed(2));
+					cf = parseFloat((cf + bean.cf).toFixed(2));
+					ce = parseFloat((ce + bean.ce).toFixed(2));
+					tf = parseFloat((tf + bean.tf).toFixed(2));
+					te = parseFloat((te + bean.te).toFixed(2));
+					of = parseFloat((of + bean.of).toFixed(2));
+					oe = parseFloat((oe + bean.oe).toFixed(2));
+					rf = parseFloat((rf + bean.rf).toFixed(2));
+					re = parseFloat((re + bean.re).toFixed(2));
+					
+					a1 = a1 + a;
+					b1 = parseFloat(b1 + b).toFixed(2);
+
+					$("#databody").append('<tr>'
+						+ '<td>' + sno + '</td>'
+						+ '<td>' + bean.dname + '</td>'
+						+ '<td>' + bean.mname + '</td>'
+						+ '<td>' + bean.vname + '</td>'
+						+ '<td>' + bean.bwf + '</td>'
+						+ '<td>' + bean.bwe + '</td>'
+						+ '<td>' + bean.lf + '</td>'
+						+ '<td>' + bean.le + '</td>'
+						+ '<td>' + bean.cf + '</td>'
+						+ '<td>' + bean.ce + '</td>'
+						+ '<td>' + bean.tf + '</td>'
+						+ '<td>' + bean.te + '</td>'
+						+ '<td>' + bean.of + '</td>'
+						+ '<td>' + bean.oe + '</td>'
+						+ '<td>' + bean.rf + '</td>'
+						+ '<td>' + bean.re + '</td>'
+						+ '<td>' + a + '</td>'
+						+ '<td>' + b + '</td>'
+						+ '</tr>');
+				}
+				$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+					+ '<td colspan = "4">TOTAL<b></b></td>'
+					+ '<td>' + bwf + '</td>'
+					+ '<td>' + bwe + '</td>'
+					+ '<td>' + lf + '</td>'
+					+ '<td>' + le + '</td>'
+					+ '<td>' + cf + '</td>'
+					+ '<td>' + ce + '</td>'
+					+ '<td>' + tf + '</td>'
+					+ '<td>' + te + '</td>'
+					+ '<td>' + of + '</td>'
+					+ '<td>' + oe + '</td>'
+					+ '<td>' + rf + '</td>'
+					+ '<td>' + re + '</td>'
+					+ '<td>' + a1 + '</td>'
+					+ '<td>' + b1 + '</td>'
+					+ '</tr>')
+			}
+		});
+	}
+</script>
+<style>
+	#ObjEntryTable {
+		border-collapse: separate;
+		border-spacing: 0 0.5em;
+	}
+</style>
+
+<body>
+	<div class="heading" colspan="20" style="text-align:center;"><b>Irrigation Source wise Details </b> </div>
+
+	<div align="center">
+		<form>
+			<table id="ObjEntryTable" style="font-size: inherit ! important; border-radius:10px;">
+				<tr>
+					<td align="right" width="30%"><b>Crop Year <font color="red">*</font></b></td>
+
+					<td align="left">
+						<select id="cropyear" name="cropyear" style="width: 200px">
+							<option value="">-------Select-------</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+					onclick="return getData();">Submit</button>
+			</div>
+		</form>
+	</div>
+
+	<div>
+		<form id="unlockreport" name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table id="tableStkId" style="width: 70%;">
+				<thead>
+					<tr>
+                            <th width="20px" rowspan="2"> Sl.No </th>
+                            <th width="20px" rowspan="2"> District Name </th>
+                            <th width="20px" rowspan="2"> Mandal Name </th>
+                            <th width="20px" rowspan="2"> Village Name </th>
+                            <th width="20px" colspan="2"> Borewells </th>
+                            <th width="20px" colspan="2"> Lift Iriigation </th>
+                            <th width="20px" colspan="2"> canal </th>
+                            <th width="20px" colspan="2"> Tank </th> 
+                            <th width="20px" colspan="2"> Open Well </th>
+                            <th width="20px" colspan="2"> Rain Fed </th> 
+                            <th width="20px" colspan="2"> Total </th> 
+                        </tr>
+
+                        <tr>
+                            <th> Farmers  </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers  </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers </th>
+                            <th> Extent (Acres) </th>
+                            <th> Farmers </th>
+                            <th> Extent (Acres) </th>
+                        </tr>
+
+					</thead>
+					<tbody id="databody">
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black;margin-top: 20px;">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

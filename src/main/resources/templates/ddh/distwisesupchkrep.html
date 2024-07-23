@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Add your existing head content here -->
+
+	<!-- Bootstrap and related scripts -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	 DataTables scripts 
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+	 DataTables Buttons Extension 
+<!--	<link rel="stylesheet" type="text/css"-->
+<!--		href="https://cdn.datatables.net/buttons/2.1.2/css/buttons.bootstrap5.min.css">-->
+<!--	<script src="https://cdn.datatables.net/buttons/2.1.2/js/dataTables.buttons.min.js"></script>-->
+<!--	<script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.bootstrap5.min.js"></script>-->
+<!--	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>-->
+<!--	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>-->
+<!--	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>-->
+<!--	<script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.html5.min.js"></script>-->
+<!--	<script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.print.min.js"></script>-->
+
+	 Your custom styles 
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<style>
+		/* CSS styles for the table */
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+	</style>
+
+	<script>
+		$(document).ready(function () {
+			// DataTable initialization
+			$("#customers").DataTable({
+				destroy: true,
+				ajax: {
+					url: "./distwisesupchkreps",
+					type: "GET",
+					dataSrc: ""
+				},
+
+				lengthMenu: [
+					[25, 50, 100, -1],
+					[25, 50, 100, 'All'],
+				],
+				order: [
+					[0, 'asc']
+				],
+				columns: [
+					{data: null, render: function (data, type, row, meta) {return meta.row + 1;}}, // Serial number column
+					{data: "dname"},
+					{data: "dho_allotted"},
+					{data: "dh_allotted"},
+					{data: "dh_allotted"},
+					{data: "ho_allotted"},
+
+
+
+				],
+				columnDefs: [
+					{
+						targets: 0,
+						className: "dt-body-center",
+						width: 100,
+					},
+					{
+						targets: 1,
+						className: "dt-body-center",
+						width: 100,
+					},
+					{
+						targets: 2,
+						className: "dt-body-center",
+						width: 100,
+					},
+					{
+						targets: 3,
+						className: "dt-body-center",
+						width: 100,
+					},
+				],
+				dom: 'Blfrtip',
+				paging: true,
+				searching: true,
+				buttons: [
+					{
+						extend: 'copy',
+						className: 'btn btn-dark rounded-0',
+						text: '<i class="far fa-copy"></i> Copy',
+						footer: true
+					},
+					{
+						extend: 'print',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						className: 'btn btn-dark rounded-0',
+						text: '<i class="fas fa-print"></i> Print',
+						footer: true
+					},
+					{
+						extend: 'pdf',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						className: 'btn btn-dark rounded-0',
+						text: '<i class="far fa-file-pdf"></i> Pdf',
+						footer: true
+					},
+					{
+						extend: 'csv',
+						className: 'btn btn-dark rounded-0',
+						text: '<i class="fas fa-file-csv"></i> CSV',
+						footer: true
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-dark rounded-0',
+						text: '<i class="far fa-file-excel"></i> Excel',
+						footer: true
+					},
+					{
+						extend: 'print',
+						exportOptions: {
+							columns: ':visible',
+						},
+					},
+				],
+			});
+
+		});
+
+	</script>
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<form method="post">
+		<div class="card">
+			<div class="card-body">
+				<table id="customers" class="table stripe row-border order-column display" style="width:100%;">
+					<thead>
+						<tr>
+							<th colspan="8" style="background-color: #c4def1;text-align: center">
+								<font color="blue" size="4pt">HORTICULTURE</font>
+							</th>
+						</tr>
+						<tr>
+							<th colspan="2" style="text-align: center">Supervisory Officer</th>
+							<th colspan="3" style="background-color: #c4def1;text-align: center">DHO</th>
+							<th colspan="3" style="background-color: #c4def1;text-align: center">HO</th>
+
+
+						</tr>
+						<tr>
+							<th class="text-center"> <b> S.No. </b> </th>
+							<th class="text-center"> <b> District </b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Allotted</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br> Correct</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br>InCorrect </b>
+							</th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Allotted</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br> Correct</b> </th>
+							<th style="background-color: #d5ffd5" class="text-center"> <b> Found </br>InCorrect </b>
+							</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</body>
+
+
+</html>

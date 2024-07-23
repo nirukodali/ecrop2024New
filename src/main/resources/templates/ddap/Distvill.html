@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<style>
+	table thead {
+    background-color: grey;
+}
+</style>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Village Wise Status Report On Preparation Of Land Data<br>And Downloaded to Tab</b>
+	</div>
+<br>
+
+<div id="loading" style="display: none;">
+       	Loading...
+		</div>\
+		
+	<div>
+		<form  name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary" style="width: 90%">
+					<thead style="color: white;">
+						 <tr>
+                        	<th> Sno</th>
+                        	<th> District</th>
+                        	<th> Mandal</th>
+                        	<th> Village</th>
+                        	<th> Total Land Parcels </th>
+                        	<th> Total Land Parcels </br> Downloaded to Tab</th>
+                        	<th> Balance Land Parcels </br>to be Downloaded</th>
+                        	<th> Total Extent (in Acres )</th>
+                        	<th> Total Extent</br> Downloaded to Tab (in Acres)</th>
+                        	<th> Balance Extent </br> to be Downloaded to Tab (in Acres)</th>
+                    	</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item ,stat: ${list}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td style="width: 15%" align="left" th:text="${item.dname}"></td>
+							<td style="width: 10%" align="left" th:text="${item.mname}"></td>
+							<td style="width: 12%" align="left" th:text="${item.vname}"></td>
+							<td style="width: 7%" align="right" th:text="${item.totallps}"></td>
+							<td style="width: 15%" align="right" th:text="${item.lps_downloaded}"></td>
+							<td style="width: 12%" align="right" th:text="${(item.totallps ) - (item.lps_downloaded)}"></td>
+							
+							<td style="width: 8%" align="right" th:text="${item.tvil_ext}"></td>
+							<td style="width: 10%" align="right" th:text="${item.vil_ext_downloaded}"></td>
+							<td style="width: 15%" align="right" th:text="${(item.tvil_ext) - (item.vil_ext_downloaded)}"></td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

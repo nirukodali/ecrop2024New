@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b>D-Krishi - eCrop (Mandal Wise)</b>
+	</div>
+<br>
+	<div>
+		<form  name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary" style="width: 80%">
+					<thead>
+						 <tr>
+                        <th> </th>
+                        <th> </th>
+                        <th> </th>
+                        <th colspan="3" align="center"> Data from D-Krishi</th>
+                        <th colspan="1"> Same crop found in e-Crop also</th>
+                        <th colspan="1"> Crop booked in e-crop is different from crop registered in D-Krishi </th>
+                        <th colspan="2"> Name of D-Krishi farmer not found in e-Crop data  </th>
+                    </tr>  
+                    <tr>
+                        <th> <b> S.No. </b> </th>
+                        <th> <b> District </b> </th>
+                        <th> <b> Mandal </b> </th>
+                        <th> <b> Crop Name </b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> Qty in kgs</b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> No of Farmers  </b> </th>
+                        <th> <b> Qty taken </b> </th>
+                    </tr>
+					</thead>
+					<tbody>
+						<tr th:each="item,stat: ${dmand}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${item.dname}"></td>
+							<td align="left" th:text="${item.mname}"></td>
+							<td align="left" th:text="${item.cropnameeng}"></td>
+							<td align="right" th:text="${item.nof}"></td>
+							<td align="right" th:text="${item.qty}"></td>
+							<td align="right" th:text="${item.no_same}"></td>
+							<td align="right" th:text="${item.no_others}"></td>
+							<td align="right" th:text="${item.no_noecrop}"></td>
+							<td align="right" th:text="${item.qty_nocrop}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>crpMao</title>
+<!--	<link rel="stylesheet" href="./styles/reportstylesheet.css" />-->
+<head th:insert="header"></head>
+<div th:insert="headerImage"></div>
+<div th:insert="navBarTop"></div>
+<div th:insert="headerMessage"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	function CallPrint(strid) {
+		var prtContent = document.getElementById(strid);
+		var mywindow = window
+				.open(
+						'',
+						'',
+						'left=0,top=0,width=950,height=600,toolbar=1,scrollbars=1,status=1,addressbar=0');
+		var is_chrome = Boolean(mywindow.chrome);
+		mywindow.document.write(prtContent.innerHTML);
+		mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+		if (is_chrome) {
+			mywindow.onload = function() { // wait until all resources loaded 
+				mywindow.focus(); // necessary for IE >= 10
+				mywindow.print(); // change window to mywindow
+				mywindow.close(); // change window to mywindow
+			};
+		} else {
+			mywindow.document.close(); // necessary for IE >= 10
+			mywindow.focus(); // necessary for IE >= 10
+			mywindow.print();
+			mywindow.close();
+		}
+
+		return true;
+	}
+</script>
+<script language="javascript">
+	var tableToExcel = (function() {
+		var uri = 'data:application/vnd.ms-excel;base64,', template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table align="center">{table}</table></body></html>', base64 = function(
+				s) {
+			return window.btoa(unescape(encodeURIComponent(s)))
+		}, format = function(s, c) {
+			return s.replace(/{(\w+)}/g, function(m, p) {
+				return c[p];
+			})
+		}
+		return function(table, name) {
+			if (!table.nodeType)
+				table = document.getElementById(table)
+			var ctx = {
+				worksheet : name || 'Worksheet',
+				table : table.innerHTML
+			}
+			window.location.href = uri + base64(format(template, ctx))
+		}
+	})()
+</script>
+
+</head>
+<script>
+function handleNullValue(value) {
+    return (value !== null && value !== undefined) ? value : 0;
+}
+	$(document).ready(function() {
+				$("#loadingsign").hide();
+				$.ajax({
+					type : "get",
+					url : "./util/getAllSeason",
+					cache : false,
+					timeout : 600000,
+					success : function(resp) {
+						//alert(JSON.stringify(resp));
+						for (var j = 0; j < resp.length; j++) {
+							var bean = resp[j];
+							$("#cropyear").append(
+									'<option value="' + bean.col1 + '">'
+										+ bean.col2 + '</option>');
+						}
+					}
+				});
+			});
+	
+	function getData() {
+		var cropyear = $("#cropyear").val();
+		  if (!cropyear) {
+	            alert("Please select a Crop Year.");
+	            return false;
+	        }
+		$("#loadingsign").show();
+		var wbdcode = $("#wbdcodee").val();
+		var cropYear = $("#cropyear").val();
+		var data = {};
+		data['wbdcode'] = wbdcode;
+		data['cropyear'] = cropYear;
+		
+		$.ajax({
+			type : "post",
+			url : "./util/mandasuperchckredressed",
+			contentType : 'application/json',
+			data : JSON.stringify(data),
+			cache : false,
+			timeout : 600000,
+			success : function(resp) {
+				$("#loadingsign").hide();
+				$("#databody").empty();
+				//alert(JSON.stringify(resp));
+				
+				var sno = 0; 
+				var gtotsupchecks=0,farmername=0,crop=0,variety=0,extent=0,src_irr=0,cr_pattern=0,sow_date=0,cropseq=0,
+				farming_type=0,directly_forwarded=0,tot_corrections=0,totbookings=0,maoapproved=0,deletedCount=0,
+				maorejected=0,maoprocessed=0,tahrejected=0,tahapproved=0,tahprocessed=0,Corrections=0,tCorrections=0;
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+					var bean = resp[j];
+					gtotsupchecks += parseInt(handleNullValue(bean.totsupchecks));
+					farmername = farmername + parseInt(handleNullValue(bean.farmername));
+					crop = crop + parseInt(handleNullValue(bean.crop));
+					variety = variety + parseInt(handleNullValue(bean.variety));
+					extent = extent + parseInt(handleNullValue(bean.extent));
+					cropseq = cropseq + parseInt(handleNullValue(bean.cropseq));
+					src_irr = src_irr + parseInt(handleNullValue(bean.src_irr));
+					cr_pattern = cr_pattern + parseInt(handleNullValue(bean.cr_pattern));
+					sow_date = sow_date + parseInt(handleNullValue(bean.sow_date));
+					farming_type = farming_type + parseInt(handleNullValue(bean.farming_type));
+					directly_forwarded = directly_forwarded+ parseInt(handleNullValue(bean.directly_forwarded));
+					deletedCount = deletedCount + parseInt(handleNullValue(bean.deletedCount));
+					totbookings = totbookings + parseInt(handleNullValue(bean.totbookings));
+					maoapproved = maoapproved + parseInt(handleNullValue(bean.maoapproved));
+					maorejected = maorejected + parseInt(handleNullValue(bean.maorejected));
+					maoprocessed = maoprocessed + parseInt(handleNullValue(bean.maoprocessed));
+					tahapproved = tahapproved + parseInt(handleNullValue(bean.tahapproved));
+					tahrejected = tahrejected + parseInt(handleNullValue(bean.tahrejected));
+					tahprocessed = tahprocessed + parseInt(handleNullValue(bean.tahprocessed));
+ 					Corrections = parseInt(handleNullValue(bean.tot_corrections))+parseInt(handleNullValue(bean.directly_forwarded))
+ 							+parseInt(handleNullValue(bean.deletedCount));
+ 					tCorrections += Corrections;
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+									+ '<td align="center">' + sno + '</td>'
+								 	+ '<td align="center">'+ bean.wbmname + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.totsupchecks) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.farmername) + '</td>' 
+									+ '<td align="center">'+ handleNullValue(bean.crop) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.variety) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.extent) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.cropseq) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.src_irr) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.cr_pattern) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.sow_date)+ '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.farming_type) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.directly_forwarded) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.deletedCount) + '</td>'
+ 									+ '<td align="center">'+ Corrections + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.totbookings) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.maoapproved) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.maorejected) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.maoprocessed)+ '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.tahapproved) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.tahrejected) + '</td>'
+									+ '<td align="center">'+ handleNullValue(bean.tahprocessed) + '</td>'
+									+ '</tr>');
+				}
+				$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+'<td colspan = "2">TOTAL<b></b></td>'
+						+'<td>'+gtotsupchecks +'</td>'
+						+'<td>'+farmername +'</td>'
+						+'<td>'+crop +'</td>'
+						+'<td>'+variety +'</td>'
+						+'<td>'+extent +'</td>'
+						+'<td>'+cropseq +'</td>'
+						+'<td>'+src_irr +'</td>'
+						+'<td>'+cr_pattern +'</td>'
+						+'<td>'+sow_date +'</td>'
+						+'<td>'+farming_type +'</td>'
+						+'<td>'+directly_forwarded +'</td>'
+						+'<td>'+deletedCount +'</td>'
+ 						+'<td>'+tCorrections +'</td>'
+						+'<td>'+totbookings +'</td>'
+						+'<td>'+maoapproved +'</td>'
+						+'<td>'+maorejected +'</td>'
+						+'<td>'+maoprocessed +'</td>'
+						+'<td>'+tahapproved +'</td>'
+						+'<td>'+tahrejected +'</td>'
+						+'<td>'+tahprocessed +'</td>'
+					+'</tr>')
+			}
+		});
+	}
+   </script>
+    
+<style>
+    #ObjEntryTable {
+     border-collapse: separate;
+	border-spacing: 0 0.5em;
+
+    }
+      
+        .scrollable-container {
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow-x: auto; /* Enable horizontal scrollbar */
+            border: 1px solid #ddd; /* Optional border for visual clarity */
+        }
+    </style>
+<body>
+
+	<div class="heading" colspan="20" style="text-align: center;"><h3>Mandal Wise SuperCheck Redressed Report
+</h3></div>
+	<p th:text="${msg}"></p>
+
+<input type="hidden" id="wbdcodee" th:value="${#session.getAttribute('wbdcode')}" />
+<input type="hidden" id="inputuserid" th:value="${#session.getAttribute('userid')}" />
+	<div id="loadingsign">
+		<div class="d-flex justify-content-center">
+			<div class="spinner-border" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+	</div>
+	 <div class="scrollable-container">
+	<div align="center">
+		<form>
+			<table id="ObjEntryTable" style="font-size: inherit !important; border-radius: 10px;">
+				<tr style="padding-left:450px;">
+					<td  align="right" width="30%"><b>Crop Year <font
+							color="red">*</font></b></td>
+
+					<td align="left"><select id="cropyear" name="cropyear"
+						style="width: 200px" >
+							<option value="">-------Select-------</option>
+					</select></td>
+				</tr>
+				
+				
+			</table>
+			<div colspan="3" align="center"
+				style="padding-top: 10px; padding-bottom: 10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary"
+					value="Submit" onclick="return getData();">Submit</button>
+			</div>
+		</form>
+	</div>
+		<form id="unlockreport" name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover table table-striped">
+				<table id="tableStkId" align="center" style="text-align: center;width:1000px">
+					<thead>
+					    <th> <b> S.No </b> </th>
+                        <th> <b> Mandal Name </b> </th>
+                        <th> <b> Tot Super check Rejected</b> </th>
+                        <th> <b> Farmer Name </b> </th>
+                        <th> <b> Crop Name </b> </th>
+                        <th> <b> Variety Name </b> </th>
+                        <th> <b> Area Sown </b> </th>
+                        <th> <b> Crop Sequence </b> </th>
+                        <th> <b> Irrigation Source</b> </th>
+                        <th> <b> Crop Pattern </b> </th>
+                        <th> <b> Sown Date </b> </th>
+                        <th> <b> Farming Type </b> </th>
+                        <th> <b> Total Directly Forwarded  </b> </th>
+                        <th> <b> Total Deleted  </b> </th>
+                        <th> <b> Total Corrections Attempted </b> </th>
+                        <th> <b> Total Corrected Bookings  </b> </th>
+                        <th> <b> No.of Bookings MAO Approved </b> </th>
+                        <th> <b> No.of Bookings MAO Rejected </b> </th>
+                        <th> <b> Total No.of Bookings MAO Processed </b> </th>
+                        <th> <b> Total No.of Bookings Tahsildar Approved </b> </th>
+                        <th> <b> Total No.of Bookings Tahsildar Rejected </b> </th>
+                        <th> <b> Total No.of Bookings Tahsildar Processed </b> </th>
+					</thead>
+					<tbody id="databody">
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color: black; margin-top: 20px;">
+			<input class="btn btn-primary"
+				name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint"
+				onClick="javascript:CallPrint('divPrint')" value="Print"> <input
+				class="btn btn-primary" type="button"
+				onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+
+		</div>
+	</div>
+</body>
+
+</html>

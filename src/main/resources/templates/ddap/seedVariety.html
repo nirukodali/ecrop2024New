@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link -->
+<!-- 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" -->
+<!-- 	rel="stylesheet"> -->
+<!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+<!-- <script scr=@{/js/jquery.js}> -->
+<!-- 		</script>  -->
+<!-- <script -->
+<!-- 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" -->
+<!-- 	type="text/javascript"></script> -->
+<!-- 	<script src="./js/jquery-3.6.0.min.js"></script> -->
+<title>seedVariety</title>
+
+<style>
+.table-heading {
+	background-color: #3498db;
+	text-align: center;
+	width: 100%;
+	margin: 0 auto;
+	padding: 5px;
+	color: white;
+	font-weight: bold;
+}
+
+/* Align text right for labels and inputs */
+label, input, select, textarea {
+	text-align: left;
+}
+
+/* Add red asterisk to required fields */
+/* Using two Unicode non-breaking spaces */
+label:after {
+	content: '*\00a0\00a0\00a0\00a0';
+	color: red;
+}
+
+/* Center placeholder text in the select dropdown */
+select.form-select option[value="0"] {
+	text-align: left;
+}
+
+.webland-container {
+	width: 460px;
+	height: 40px;
+	/* Any other styles you want to add */
+	/* This is used to distance between Updation Of Social Audit Grievances Received and Crop Year  */
+}
+
+.form-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	margin-bottom: 15px;
+	position: relative;
+}
+
+.form-container label {
+	width: 250px;
+	margin-right: 10px;
+	text-align: right;
+}
+
+.form-container input, .form-container select {
+	width: 270px;
+}
+
+.error-message {
+	position: absolute;
+	left: 250px; /* Adjust this value based on your label width */
+	bottom: -17px;
+	/* Adjust this value to position the error message below the input field */
+	color: red;
+	font-size: 13px;
+	margin-top: 5px;
+	white-space: nowrap; /* Prevent the error message from wrapping */
+}
+</style>
+
+
+
+
+</head>
+
+
+
+<body>
+<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+		
+	
+<!-- 	<div th:replace="home :: content"></div> -->
+	<p class="table-heading" style="text-align: center;background-color:navy ; color: white;font-size: xx-large;">Add Seed Variety</p>
+	<div class="row justify-content-center align-items-center"
+		style="height: 10vh;">
+		<div class="webland-container">
+			<form th:object="${seedVariety}" th:action="@{/saveSeedVariety}"
+				method="post">
+
+
+				<div class="form-container">
+					<label for="name">Crop Group</label>
+					<td><select th:id="cropGroup" th:name="cropGroup" th:field="*{CropGroup}"
+						class="form-select" aria-label="Select Village"
+						th:onchange="getSeedNames(this.value)">
+							<option value="">---Select Group---</option>
+							<th:block th:each="emp : ${seedGroup}">
+								<option th:value="${emp.cropGrpId}" th:text="${emp.grpName}"></option>
+							</th:block>
+					</select></td>
+					
+					<div th:if="${#fields.hasErrors('CropGroup')}"
+						th:errors="*{CropGroup}" style="color: red;">				
+					</div>
+					
+				</div>
+			
+				<div class="form-container">
+					<label for="name">Crop Name</label>
+					<td><select th:id="cropNameId" th:name="cropNameId" th:field="*{CropName}"
+						class="form-select" aria-label="Select Village">
+							<option value="">---Select Name---</option>
+							<option th:each="emp : ${seedName}" th:value="${emp.cropid}"
+								th:text="${emp.cropName}"></option>
+					</select></td>
+					
+					<div th:if="${#fields.hasErrors('CropGroup')}"
+						th:errors="*{CropGroup}" style="color: red;">				
+					</div>
+					
+				</div>
+
+				<div class="form-container">
+					<label for="applicantName">Variety Name </label> <input type="text"
+						th:id="VarietyName" th:name="VarietyName" th:field="*{VarietyName}"
+						th:value="${VarietyName}" maxlength="50" 
+						title="Please enter only alphabetic characters">
+					<div class="error-message" id="name-error-message"></div>
+					
+					<div th:if="${#fields.hasErrors('CropGroup')}"
+						th:errors="*{CropGroup}" style="color: red;">				
+					</div>
+					
+				</div>
+
+
+				<div class="mb-3"
+					style="display: flex; flex-direction: column; align-items: center;">
+					<div
+						style="display: flex; justify-content: center; margin-bottom: 10px;">
+						<button type="submit" class="btn btn-primary"
+							onclick="fetchData()">Submit</button>
+						<button type="button" class="btn btn-primary"
+							th:onclick="window.location.href='/home'"
+							style="margin-left: 10px;">Go Back</button>
+					</div>
+
+					<div>
+						<span th:utext="${msg}"></span>
+					</div>
+				</div>
+
+
+			</form>
+		</div>
+	</div>
+	
+</body>
+
+
+<script>
+    var inputElement = document.getElementById('VarietyName');
+    var errorMessage = document.getElementById('name-error-message');
+    document.getElementById('VarietyName').value='';
+    inputElement.addEventListener('input', function (event) {
+        var input = this.value;
+        var sanitizedInput = input.replace(/[^A-Za-z ]/g, '');
+
+        if (input !== sanitizedInput) {
+            // If the input contains non-alphabetic characters, prevent their entry and show error
+            this.value = sanitizedInput;
+            errorMessage.textContent = 'Please enter only alphabetic characters';
+        } else {
+            errorMessage.textContent = '';
+        }
+    });
+</script>
+
+<script>
+
+function getSeedNames(a){
+	
+	var dropdownselect = '<option value="">-----select------</option>';
+	$.ajax({
+	type : "get",
+url : "./getSeedNames?groupCode="+a,
+cache : false,
+success : function(data){
+	
+jQuery.each(data, function(item){
+dropdownselect += "<option value='" + data[item].cropid + " '>"
+ + data[item].cropName + "";
+});
+document.getElementById("cropNameId").innerHTML = dropdownselect
+},
+error : function(e){
+}
+
+});
+
+}
+</script>
+</html>

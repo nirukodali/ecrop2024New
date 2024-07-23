@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	<script>
+		function CallPrint(strid) {
+			var prtContent = document.getElementById(strid);
+			var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=1,scrollbars=1,status=1,addressbar=0');
+			var is_chrome = Boolean(mywindow.chrome);
+			mywindow.document.write(prtContent.innerHTML);
+			mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+			if (is_chrome) {
+				mywindow.onload = function () { // wait until all resources loaded 
+					mywindow.focus(); // necessary for IE >= 10
+					mywindow.print(); // change window to mywindow
+					mywindow.close(); // change window to mywindow
+				};
+			} else {
+				mywindow.document.close(); // necessary for IE >= 10
+				mywindow.focus(); // necessary for IE >= 10
+				mywindow.print();
+				mywindow.close();
+			}
+
+			return true;
+		}
+
+	</script>
+	<script language="javascript">
+		var tableToExcel = (function () {
+			var uri = 'data:application/vnd.ms-excel;base64,'
+				, template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table align="center">{table}</table></body></html>'
+				, base64 = function (s) {
+					return window.btoa(unescape(encodeURIComponent(s)))
+				}
+				, format = function (s, c) {
+					return s.replace(/{(\w+)}/g, function (m, p) {
+						return c[p];
+					})
+				}
+			return function (table, name) {
+				if (!table.nodeType)
+					table = document.getElementById(table)
+				var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+				window.location.href = uri + base64(format(template, ctx))
+			}
+		})()
+		
+		
+// 		VALIDATION
+ function validateForm() {
+        var dcode = document.getElementById("inputdcode").value;
+        var mcode = document.getElementById("inputmcode").value;
+
+        // Check if District is selected
+        if (dcode === "") {
+            alert("Please select a District");
+            return false;
+        }
+
+        // Check if Mandal is selected
+        if (mcode === "") {
+            alert("Please select a Mandal");
+            return false;
+        }
+        return true;
+    }
+	</script>
+
+	</head>
+
+
+
+
+	<script>
+		function mandal() {
+			var inputdcode = $("#inputdcode").val();
+			$("#inputmcode").empty();
+			//alert("inputdcode===========" + inputdcode);
+			$.ajax({
+				type: "get",
+				url: "./util/getAllmandal?dcode=" + inputdcode,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					//alert(JSON.stringify(resp));
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#inputmcode").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		}
+
+		function gatData() {
+			$("#databody").empty();
+			 if (validateForm()) {
+		            var dcode = $("#inputdcode").val();
+		            var mcode = $("#inputmcode").val();
+
+			$.ajax({
+				type: "get",
+				url: "./util/villsec?dcode=" + dcode + "&mcode=" + mcode,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					//alert(JSON.stringify(resp));
+					var sno = 0;
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+						$("#databody").append('<tr>'
+							+ '<td> ' + sno + '</td>'
+							+ '<td> ' + bean.vsdname + '</td>'
+							<!--						+ '<td> ' + bean.vcode + '</td>'-->
+							+ '<td> ' + bean.vname + '</td>'
+
+							+ '</tr>');
+
+					}
+				}
+			});
+		}
+	}
+
+	</script>
+
+
+	</head>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b>Village Secretariates List</b></div><br>
+
+		<div align="center">
+			<div class="tdnum"> <b> &numsp;&numsp;&numsp;&numsp;&numsp;
+					District <font color="red">*</font></b>&numsp;
+
+				<!--			<select name="selectedDist" id="inputdcode" style="width:200px;text-align:left;">-->
+				<select name="selectedDist" id="inputdcode" style="width:200px;text-align:left;"
+					onchange="return  mandal();">
+					<option value="">----Select----</option>
+					<option th:each="list : ${dist}" th:value="${list.dcode}" th:text="${list.dname}"></option>
+				</select>
+			</div><br>
+
+
+			<div class="tdnum"> <b> &numsp;&numsp;&numsp;&numsp;&numsp;
+					Mandal <font color="red">*</font></b>&numsp;
+
+				<select id="inputmcode" name="selectedDist" style="width:200px;text-align:left;">
+					<option value="">----Select----</option>
+					<!--				<option th:each="list : ${mand}" th:value="${list.mcode}" th:text="${list.mname}"></option>-->
+				</select>
+			</div>
+			<br>
+
+			<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit" onclick="gatData()">Submit
+				</button>
+			</div>
+		</div><br>
+
+		<div>
+			<form method="post">
+				<div align="center" id="divPrint" class="table table-hover ">
+					<table style="width: 50%;">
+						<thead>
+							<tr>
+								<th> <b> S.No. </b> </th>
+								<th> <b>Mandal Name </b> </th>
+								<th> <b>Village Secretariate Name </b> </th>
+							</tr>
+						</thead>
+						<tbody id="databody"></tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+
+<!--		<div align="center">-->
+<!--			<a th:href="@{/}"> Back</a>-->
+
+<!--		</div>-->
+	</body>
+
+</html>

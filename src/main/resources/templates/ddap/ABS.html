@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="header"></head>
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b> Validation Of Mobile No Report
+			</b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table style="width: 60%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+						<th> SNo</th>
+                        <th> District </th>
+                        <th> RbkName </th> 
+                        <th> No of Record Pushed For Updation</th>                        
+                        <th> No of Record Updated</th>
+                        <th> Pending</th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="absdatadeati ,stat: ${absdata}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${absdatadeati.dname}"></td>
+							<td align="left" th:text="${absdatadeati.rbkname}"></td>
+							<td align="right" th:text="${absdatadeati.totpushed}"></td>
+							<td align="right" th:text="${absdatadeati.updcnt}"></td>
+							<td align="right" th:text="${absdatadeati.totpushed-absdatadeati.updcnt}"></td>
+   						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</form>
+
+
+		</div>
+<!-- 		<div align="center"> -->
+<!-- 			<a th:href="@{/}"> Back</a> -->
+
+<!-- 		</div> -->
+	</body>
+
+</html>

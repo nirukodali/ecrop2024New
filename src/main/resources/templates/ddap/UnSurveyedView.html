@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var ported = parseFloat(row.children[3].textContent);
+				total += ported;
+			});
+			document.getElementById('totalported').textContent = total;
+		});
+	</script>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b> UnSurveyed UnSettled Details </b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table style="width: 60%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th rowspan="2"> <b> S.No. </b> </th>
+							<th rowspan="2"> <b>District </b> </th>
+							<th rowspan="2"> <b>No.Of Mandal </b> </th>
+							<th rowspan="2"> <b> No.Of Village </b> </th>
+							<th colspan="2"> <b> UnSettled Estate </b> </th>
+							<th colspan="2"> <b> UnSettled Inam </b> </th>
+							<th colspan="2"> <b>UnSurveyed Estate </b> </th>
+							<th colspan="2"> <b>UnSurveyed Inam </b> </th>
+						</div>
+
+						<tr>
+							<th>No Of Entries</th>
+							<th>Extent</th>
+							<th>No Of Entries</th>
+							<th>Extent</th>
+							<th>No Of Entries</th>
+							<th>Extent</th>
+							<th>No Of Entries</th>
+							<th>Extent</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="unsurveyeddeati ,stat: ${unsurveyed}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${unsurveyeddeati.wbdname}"></td>
+							<td align="right" th:text="${unsurveyeddeati.no_mandals}"></td>
+							<td align="right" th:text="${unsurveyeddeati.no_villages}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unset_est}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unset_est_ext}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unset_inam}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unset_inam_ext}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unsurveyed_est}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unsurveyed_est_ext}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unsurveyed_Inam}"></td>
+							<td align="right" th:text="${unsurveyeddeati.Unsurveyed_Inam_ext}"></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</form>
+
+
+		</div>
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

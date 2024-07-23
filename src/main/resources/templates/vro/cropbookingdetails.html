@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="./js/jquery/jquery.cookie.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> <!-- Include DataTables JS -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+	<!-- Include DataTables CSS -->
+
+	<style>
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+
+		select {
+			padding: 1.5px;
+			border: none;
+			margin-bottom: 5px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+<form name="form1" method="post" th:action="@{/cropbookingdetails-report}">
+	<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-auto">
+					<div class="card card-body" style="background-color: #e6e2d3;">
+						<div class="card-title">
+							<h4
+								style="background-color: darkgreen; color: white; width: auto; text-align: center; padding: 7px; border: none; border-radius: 5px;">
+								Crop Booking Details</h4>
+							<br />
+						</div>
+
+						<table align="center">
+							<tr>
+								<th colspan="2" class="heading"><b> </b></th>
+							</tr>
+							<tr>
+								<td class="tdnum" colspan="2" style="width: 50%"><b>Crop
+										Year <font color="red">*</font> :
+								</b></td>
+								<td><select name="cropyear" id="cropyearid"
+									style="width: 200px">
+										<option value="0" th:selected="0">------Select
+											CropYear--------</option>
+										<option th:each="cropyear: ${cropyears}"
+											th:value="${cropyear.seasonvalue}"
+											th:text="${cropyear.cropyear}"></option>
+								</select></td>
+							</tr>
+							
+							<tr>
+								<td class="tdnum" colspan="2" style="width: 50%"><b>Crop
+										<font color="red">*</font> :
+								</b></td>
+								<td><select name="cropname" id="cropnameid"
+									style="width: 200px">
+										<option value="0" th:selected="0">------Select
+											Crop--------</option>
+										<option th:each="cropnme: ${cropnames}"
+											th:value="${cropnme.cropid}"
+											th:text="${cropnme.cropname}"></option>
+								</select></td>
+							</tr>
+							<tr>
+								<td class="tdnum" colspan="2" style="width: 50%"><b>Farmer
+										Type<font color="red"></font> :
+								</b></td>
+								<td><select name="farmertypename" id="farmertypeid"
+									style="width: 200px">
+										 <option value="0" th:selected="0">------Select Farmer Type--------</option>
+                                          <option value="1">To Be Authenticated</option>
+										
+								    </select></td>
+							</tr>
+								
+							</table>
+							
+							
+							<th class="heading" colspan="3"><b> &nbsp;&nbsp; &nbsp;&nbsp;</b>
+							</th>
+							<tr>
+								<td class="heading tdnum" colspan="10">
+									<b>Report Time : <span th:text="${theDate}"></span></b>
+								</td>
+								
+																
+							</tr>
+							
+							<tr>
+								<td colspan="3"  align="center"><div class="mt-3 d-flex justify-content-center">
+									<input type="submit" value="Submit" name="Submit" class="btn btn-success " />
+									
+								</div>
+									
+								</td>
+								<td colspan="3"> &numsp; </td>
+							</tr>
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	<p id="displayText"></p>
+
+	<table id="customers">
+		<thead>
+			<tr>
+                        <th> <b> Sl.No </b> </th>
+                        <th> <b> Booking-id </b> </th>
+                        <th> <b> Mandal </b> </th>
+                        <th> <b> Village </b> </th> 
+                        <th> <b> RBK Name </b> </th> 
+                        <th> <b> Farmer Name </b> </th>
+                        <th> <b> Aadhaar Number </b> </th>
+                        <th> <b>Father Name </b> </th>
+                        <th> <b> Khatha Number</b> </th>
+                        <th> <b>Survey Number </b> </th>
+                        <th> <b>Crop Name </b> </th>
+                        <th> <b>Variety Name </b> </th>
+                        <th> <b>Area Sown </b> </th>
+                        <th> <b>Date of Sowing </b> </th>
+                        <th> <b>Crop Nature </b> </th>
+                        <th> <b>Water Source </b> </th>
+                        <th> <b>Method of Irrigation </b> </th>
+                        <th> <b>Farming Type </b> </th>
+                        <th> <b>Updated By </b> </th>
+                    </tr>
+		</thead>
+		<tbody>
+			<tr th:each="crpreprt, iterStat : ${crpreprt}">
+    <td th:text="${iterStat.count}"></td>
+    <td th:text="${crpreprt.bookingid}" class="text-center"></td>
+    <td th:text="${crpreprt.mname}" class="text-center"></td>
+    <td th:text="${crpreprt.village}" class="text-center"></td>
+   <td th:text="${crpreprt.rbkname}" class="text-center"></td>
+    <td th:text="${crpreprt.oc_name}" class="text-center"></td>
+    <td th:text="${crpreprt.cr_farmeruid}" class="text-center"></td>
+    <td th:text="${crpreprt.oc_fname}" class="text-center"></td>
+    <td th:text="${crpreprt.kh_no}" class="text-center"></td>
+    <td th:text="${crpreprt.cr_sno}" class="text-center"></td>
+    <td th:text="${crpreprt.cropname}" class="text-center"></td>
+    <td th:text="${crpreprt.varietyname}" class="text-center"></td>
+    <td th:text="${crpreprt.cultivable_land}" class="text-center"></td>
+    <td th:text="${crpreprt.cr_sow_date}" class="text-center"></td>
+    <td th:text="${crpreprt.cropnature}" class="text-center"></td>
+    <td th:text="${crpreprt.watersource}" class="text-center"></td>
+    <td th:text="${crpreprt.irrmethoddesc}" class="text-center"></td>
+    <td th:text="${crpreprt.farmingtype}" class="text-center"></td>
+    <td th:text="${crpreprt.updatedby}" class="text-center"></td>
+</tr>
+
+		</tbody>
+	</table>
+	<script>
+		$(document).ready(function () {
+			$('#customers').DataTable(); // Initialize DataTables on your table
+		});
+	</script>
+	
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<script>
+
+
+		function getData() {
+			var cropYear = $("#cropyear").val();
+			alert("cropYear=============>" + cropYear);
+			$.ajax({
+				type: "get",
+				url: "./util/irrigimwise?wbdcode=" + wbdcode+"&cropyear="+cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					var sno = 0;
+					var cf = 0, ce = 0, df = 0, de = 0, sf = 0, se = 0, rf = 0, re = 0,
+						b1 = 0, b2 = 0;
+
+					alert(JSON.stringify(resp));
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+
+						var bean = resp[j];
+
+						cf = cf + bean.cf;
+						ce = ce + bean.ce;
+						df = df + bean.df;
+						de = de + bean.de;
+						sf = sf + bean.sf;
+						se = se + bean.se;
+						rf = rf + bean.rf;
+						re = re + bean.re;
+
+						a1 = bean.cf + bean.df + bean.sf + bean.rf;
+						a2 = bean.ce + bean.de + bean.se + bean.re;
+
+						b1 = b1 + a1;
+						b2 = b2 + a2
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td><a href="your_link_here">' + bean.wbmname + '</a></td>'
+							+ '<td>' + bean.cf + '</td>'
+							+ '<td>' + bean.ce + '</td>'
+							+ '<td>' + bean.df + '</td>'
+							+ '<td>' + bean.de + '</td>'
+							+ '<td>' + bean.sf + '</td>'
+							+ '<td>' + bean.se + '</td>'
+							+ '<td>' + bean.rf + '</td>'
+							+ '<td>' + bean.re + '</td>'
+							+ '<td>' + a1 + '</td>'
+							+ '<td>' + a2 + '</td>'
+
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2">TOTAL<b></b></td>'
+						+ '<td>' + cf + '</td>'
+						+ '<td>' + ce + '</td>'
+						+ '<td>' + df + '</td>'
+						+ '<td>' + de + '</td>'
+						+ '<td>' + sf + '</td>'
+						+ '<td>' + se + '</td>'
+						+ '<td>' + rf + '</td>'
+						+ '<td>' + re + '</td>'
+						+ '<td>' + b1 + '</td>'
+						+ '<td>' + b2 + '</td>'
+						+ '</tr>')
+				}
+			});
+		}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Irrigation Source wise Details</b>
+		</div>
+		<br>
+		<div class="container">
+			<form name="unlockreport" method="post">
+				<div align="center" id="divPrint">
+					<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+						<thead style="color: white;">
+							<tr>
+								<th width="20px" rowspan="2"> Sl.No </th>
+								<th rowspan="2"> Mandal </th>
+								<th colspan="2"> Conventional </th>
+								<th colspan="2"> Drip Irrigation </th>
+								<th colspan="2"> Sprinkler </th>
+								<th colspan="2"> Rain Fed </th>
+								<th colspan="2"> Total </th>
+							</tr>
+
+							<tr>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres)</th>
+							</tr>
+
+						</thead>
+
+						<tbody id="databody"></tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

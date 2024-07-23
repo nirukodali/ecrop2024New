@@ -1,0 +1,1044 @@
+<form th:action="@{/home}" method="post" th:fragment="navBarTop">
+	<nav class="navbar navbar-expand-sm bg-dark-green navbar-dark container-fluid">
+		<div class="container">
+			<!--			<button class="navbar-toggler" type="button"-->
+			<!--				data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">-->
+			<!--				<span class="navbar-toggler-icon"></span>-->
+			<!--			</button>-->
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item" style="margin-left: 85px;"></li>
+					<li class="nav-item dropdown"><a class="nav-link text-white" href="home"> HOME </a></li>
+					<li class="nav-item" style="margin-left: 85px;"></li>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle text-white" href="#"
+							id="agreementDropdown" data-bs-toggle="dropdown" th:unless="${session.role} ==25"> USER
+							MANAGEMENT </a> <!-- 							 th:if="${session.}" -->
+						<ul class="dropdown-menu" aria-labelledby="agreementDropdown">
+							<!-- 							 							<li><a class="dropdown-item" href="updateProfiles" th:if="${session.userid } == 25">Update Profile </a></li> -->
+							<!-- 													<li><a class="dropdown-item" href="horesetpwd" th:if="${session.userid} != 22">Reset Password </a></li> -->
+							<li sec:authorize="!hasAuthority('25')"><a class="dropdown-item"
+									href="updateProfiles">Update Profile</a></li>
+							<li sec:authorize="hasAuthority('17')"><a class="dropdown-item" href="horesetpwd">Reset
+									Password</a></li>
+
+							<!-- 													<li sec:authorize="hasAuthority('22')"><a -->
+							<!-- 								class="dropdown-item" href="horesetpwd"> Ho Reset Password</a></li> -->
+							<!-- 													<li><a class="dropdown-item " href="login">Village Normal Areas Updation</a> -->
+							<!-- 													</li> 							<li><a class="dropdown-item" href="#">Contact Us</a></li> -->
+						</ul> <!-- 												 MAO dataDownload -->
+					<li class="nav-item" style="margin-left: 85px;"></li>
+					<li sec:authorize="hasAuthority('5')" class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle text-white" href="#" id="dataDownload"
+							data-bs-toggle="dropdown"> Data Downloads </a>
+						<ul class="dropdown-menu" aria-labelledby="reportsDropdown">
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="getEfishDataEntry">Download e-Fish Data</a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="weblandCropEntry">Download Webland Data</a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="ccrcCropEntry">Download CCRC Data</a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="rofrLandRecordEntry">Download ROFR Data</a></li>
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="perinialdataEntry">
+									Download Perennial Crop Data</a></li>
+
+
+
+
+						</ul>
+					</li>
+					</li>
+
+					<!--RBK -->
+
+					<!-- th:if="${session.role != 44 && session.role != 18 && session.role != 45 && session.role != 30 && session.role != 31 && session.role != 9}" -->
+					<li class="nav-item" style="margin-left: 85px;"></li>
+					<li class="nav-item dropdown" th:if="${session.role} ==25 or ${session.role} ==5 or ${session.role} ==2 or ${session.role} ==17
+					 or ${session.role} ==22 or ${session.role} ==19 or ${session.role} ==31 or ${session.role} ==30 or ${session.role} ==9 or ${session.role} ==44 or ${session.role} ==55"><a
+							class="nav-link dropdown-toggle text-white" href="#" id="transactionDropdown"
+							data-bs-toggle="dropdown">
+							TRANSACTIONS </a>
+						<ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item btn btn-primary"
+									href="selectionOfSurveyNo">Selection
+									Of Survey No's For Crop Booking</a></li>
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="cultivator">Add/Update
+									Cultivator</a></li>
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="forwardPerinneal">
+									Forward
+									Perennial Crops</a></li>
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="nonweblandfarmersdata">Non-WebLand
+									Data Entry</a></li>
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="aadhaarSearch">Pattadar Empty
+									Aadhaar Updation</a></li>
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="crbkFormEntry">Correction For VRO Rejected Records</a></li>
+
+							<!-- 														<li th:if="${session.userType == 25}"><a class="dropdown-item" href="repCultivatorDtls">Rep Cultivator Details</a></li> -->
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="editCropBookingDtls">Edit Crop Booking Details</a></li>
+
+
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="socialAudit">Updation
+									Of Social Audit Grievances Received</a></li>
+
+
+
+
+
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="deceasedSearch">Deseaced Farmer
+									Nominee Updation</a></li>
+
+
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="BiometricSearch">Edit
+									Biometric
+									Nominee</a></li>
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="edituid">Aadhaar Edit
+									In Farmer Ekyc</a></li>
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+									href="unlockSearch">Lock/UnLock Extent Entry</a></li>
+
+
+
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item btn btn-primary"
+									href="cropPattern">Rabi 2022-23 Mono To Mixed Cropping Pattern Change</a></li>
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="landparcels">Request
+									For Enable Objectional Land Parcels For Booking</a></li>
+
+													<li sec:authorize="hasAuthority('25')"><a
+															class="dropdown-item" href="getGrivanceRed">Rabi 2022-23 Social Audit Grievance Redressal(Mixed to Inter Crop)</a></li>
+							
+							<li sec:authorize="hasAuthority('25')"><a class="dropdown-item btn btn-primary"
+									href="eFishApproval">E-Fish Approval</a></li>
+									
+<!--  DAO  -->
+							<li sec:authorize="hasAuthority('9')"><a class="dropdown-item btn btn-primary"
+									href="eFishApprovalByDAO">E-Fish Approval BY DAO</a></li>
+									
+<!--  JC  -->
+							<li sec:authorize="hasAuthority('44')"><a class="dropdown-item btn btn-primary"
+									href="eFishApprovalByJC">E-Fish Approval BY JC</a></li>
+
+							
+							
+							
+							<!-- VRO -->
+
+							<li sec:authorize="hasAuthority('30')">
+								<a class="dropdown-item" href="VroRejectReasons">Entry of VRO Objections</a>
+							</li>
+
+							<!--  TAH -->
+
+							<li sec:authorize="hasAuthority('2')"><a class="dropdown-item"
+									href="addlAuthOficersIntf">Add
+									Additional VRO</a></li>
+							<li sec:authorize="hasAuthority('2')"><a class="dropdown-item" href="unsurveyed">Unsurveyed
+									Unsetteled Data Entry</a></li>
+
+							<li sec:authorize="hasAuthority('2')"><a class="dropdown-item"
+									href="verifyInchargesIntf">VRO
+									Incharge Approval</a></li>
+
+
+
+							<!--  DDAP -->
+							<li sec:authorize="hasAuthority('17')"><a class="dropdown-item" href="addcropname">Add Crop
+									Name</a></li>
+							<li sec:authorize="hasAuthority('17')"><a class="dropdown-item" href="seedVariety"> Add Seed
+									Variety</a></li>
+							<li sec:authorize="hasAuthority('17')"><a class="dropdown-item" href="CrAddGroupName"> Add
+									Crop Group
+									Name</a></li>
+									
+									<li sec:authorize="hasAuthority('17')"><a class="dropdown-item" href="./getdigitalsmsentry">Digital SMS</a></li>
+
+							<!-- 									<li><a class="dropdown-item " href="CrAddGroupName"> Add Crop Group Name</a></li> -->
+
+							<!--	MAO-->
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+									href="employeeprofile"> Employee Profile</a></li>
+									
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+									href="rbkmapping"> Mapping of Employee with Village Secretariat </a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+									href="maoInchargeDeletion">Employee Incharge Deletion Before ADA/DAO Approval </a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+									href="VillageNormalAreasUpdation">Village
+									Normal Areas Updation</a></li>
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="DeviceRegistration">Device
+									Registration</a></li>
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+									href="devicederegister">Device
+									Deregistration</a></li>
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item" href="datadownload">Enable
+									Data -
+									Redownload</a></li>
+							<!--   -->
+
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="allocOfSurveyNo">Allocation
+									Of SurveyNo's</a></li>
+									
+							<li sec:authorize="hasAuthority('5')"><a class="dropdown-item btn btn-primary"
+									href="eFishApprovalByMAO">E-Fish Approval BY MAO</a></li>
+							
+<!--							ADA Transaction		-->
+							<li sec:authorize="hasAuthority('31')"><a class="dropdown-item"
+									href="adainchargesearch"> Incharge Approval </a></li>
+									
+							<!-- 							<li sec:authorize="hasAuthority('5')"><a -->
+							<!-- 								class="dropdown-item btn btn-primary" href="employeeprofile">Employee -->
+							<!-- 									Registration</a></li> -->
+
+							<!-- 							<li sec:authorize="hasAuthority('5')"><a -->
+							<!-- 								class="dropdown-item btn btn-primary" href="rbkmapping">Employee-RBK -->
+							<!-- 									Mapping</a></li> -->
+
+
+
+
+
+
+							<!-- 								<li sec:authorize="hasAuthority('5')"><a -->
+							<!-- 								class="dropdown-item" href="addlAuthOficersIntf">Add Additional VRO</a></li> 	 -->
+
+							<!-- 								<li sec:authorize="hasAuthority('5')"><a -->
+							<!-- 								class="dropdown-item" href="verifyInchargesIntf">MAO Mapping Approval</a></li> -->
+
+
+
+							<!-- HO -->
+
+							<li sec:authorize="hasAuthority('22')"><a class="dropdown-item"
+									href="VillageNormalAreasUpdation">Village
+									Normal Areas Updation</a></li>
+
+
+							<!-- DHO -->
+							<li sec:authorize="hasAuthority('19')"><a class="dropdown-item btn btn-primary"
+									href="HoMappingIntf">Mapping
+									of HO Jurisdictions</a></li>
+							<li sec:authorize="hasAuthority('19')"><a class="dropdown-item btn btn-primary"
+									href="unMappingInf">UnMapping
+									of HO Jurisdictions</a></li>
+
+							<!-- 							VRO -->
+							<!-- 							<li th:if="${session.userType == 30}"><a  -->
+							<!-- 								class="dropdown-item" href="/vroObjectionable">VroObjectionable</a></li>     -->
+
+
+<!-- CommonRolesPages -->
+
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==44 or ${session.role} ==45 or ${session.role} ==9 or ${session.role} ==19
+					 or ${session.role} ==46 or ${session.role} ==31 or ${session.role} ==2 or ${session.role} ==5 or ${session.role} ==22">
+
+								<a class="dropdown-item btn btn-primary" href="superCheckAda">Super Check With diffrent
+									Roles (ADA)</a>
+							</li>
+
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==44 or ${session.role} ==45 or ${session.role} ==9 or ${session.role} ==19
+					 or ${session.role} ==46 or ${session.role} ==31 or ${session.role} ==2 or ${session.role} ==5 or ${session.role} ==22">
+
+								<a class="dropdown-item btn btn-primary" href="superCheckIntf">Supervisory Check
+									(superCheckIntf)</a>
+							</li>
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==44 or ${session.role} ==45 or ${session.role} ==9 or ${session.role} ==19
+					 or ${session.role} ==46 or ${session.role} ==31 or ${session.role} ==2 or ${session.role} ==5 or ${session.role} ==22">
+
+								<a class="dropdown-item btn btn-primary" href="superCheckUserIntf">Supervisory Check
+									(superCheckUserIntf)</a>
+							</li>
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==44 or ${session.role} ==45 or ${session.role} ==9 or ${session.role} ==19
+					 or ${session.role} ==21 or ${session.role} ==31 or ${session.role} ==2 or ${session.role} ==5 or ${session.role} ==20">
+
+								<a class="dropdown-item btn btn-primary" href="checkSupervisoryIntf">Supervisory Check-
+									Observations- Report</a>
+							</li>
+							
+							
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==5 or ${session.role} ==2 or ${session.role} ==9 or ${session.role} ==44">
+
+								<a class="dropdown-item btn btn-primary" href="enableLandController">Enable Objectble
+									Land</a>
+							</li>
+
+							<li class="nav-item dropdown"
+								th:if="${session.role} ==55">
+
+								<a class="dropdown-item btn btn-primary" href="eFishApprovalByDFO">E-Fish Approval BY DFO</a>
+							</li>
+
+						</ul>
+					</li>
+
+
+
+
+
+					<!-- Reports -->
+
+
+
+					<!-- Horti Reports -->
+
+					<!-- sec:authorize="hasAuthority('18')" -->
+
+
+					<li class="nav-item" style="margin-left: 85px;"></li>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle text-white" href="#" id="reports"
+							data-bs-toggle="dropdown"> Reports </a>
+						<ul class="dropdown-menu" aria-labelledby="reportsDropdown">
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item" href="cropgroupsrep"> Crop
+									Groups</a></li>
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item" href="cropnamesrep"> Crop
+									Names</a></li>
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item" href="watersourcesrep">
+									Water Sources</a></li>
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item" href="cropvarietiesrep">
+									Crop
+									Varieties</a></li>
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item"
+									href="distwisestatusrepforallcrops"> District wise status report for all crops</a>
+							</li>
+
+							<li sec:authorize="hasAuthority('18')"><a class="dropdown-item" href="distwisesupchkrep">
+									Supervisory Officer</a></li>
+
+							<!--DDAP Admin Reports -->
+			 <li  sec:authorize="hasAuthority('17')"> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>REGISTRATION</b> </a>
+            <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+                  <li><a class="dropdown-item" href="#"><b>Registration</b></a></li>
+                  
+				  <li><a class="dropdown-item " href="vaa">VAA/VHA/VSA Registration Details</a></li>
+
+				  <li><a class="dropdown-item " href="aadhaarcn"> VAA/VHA/VSA Aadhaar Updation Details</a></li>
+	
+				  <li><a class="dropdown-item " href="vaadevice">Device Registration Details</a></li>
+
+				  <li><a class="dropdown-item " href="villseclist">Village Secretariates List</a></li>
+
+				  <li><a class="dropdown-item" href="pendvillmap">Pending Village Mapping List</a></li>
+            </ul>
+    </li>
+                     
+
+                     
+  <li  sec:authorize="hasAuthority('17')"> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>ABSTRACT REPORTS</b> </a>
+      <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+        <li><a class="dropdown-item" href="abs1">District Wise Report On Validation Of Farmer Mobile Numbers</a></li>
+							        
+		<li><a class="dropdown-item " href="dept"> Report On Department Wise VAA/VRO Authorization And eKYC </a></li>
+									
+		<li><a class="dropdown-item " href="rofrext">Report On ROFR Extent Abstract</a></li>
+
+<!--		<li><a class="dropdown-item" href="disthorddap">District Wise Status Report On All Crops</a></li>-->
+
+		<li><a class="dropdown-item" href="bookingsummary">Summary Report on Mapping vs Booked Extent</a></li>
+
+		<li><a class="dropdown-item" href="wholesurveymand">Report On Whole Wise Survey Nos</a></li>
+
+		<li><a class="dropdown-item" href="landdetails">Report On Land Data Preparation - Current Season</a></li>
+									
+		<li><a class="dropdown-item" href="disttabdownload">Report on District Wise Tab Downloaded Details </a></li>
+
+        
+        <li> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>Normal Areas</b> </a>
+            <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+                <li><a class="dropdown-item" href="extbooknormal">Abstract Report on Normal Area VS Booked Area</a></li>
+							        
+				<li><a class="dropdown-item" href="normalabs">District Wise Normal Areas Entry</a></li>
+
+				<li><a class="dropdown-item" href="mandnormwise">Mandal Wise Normal Areas Entry</a></li>
+				
+				<li><a class="dropdown-item " href="normarearep">Mandal Wise Normal Areas with Crop</a></li>
+            </ul>
+        </li>
+        
+        <li> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>eKYC</b> </a>
+            <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+				<li><a class="dropdown-item" href="distvaavro">Report On VAA/VRO Authentication and Farmer eKYC</a></li>
+							
+				<li><a class="dropdown-item " href="authcropwise">Crop Wise Report on VAA/VRO Authentication and Farmer ekyc</a></li>
+            </ul>
+        </li>
+        
+        <li> <a class="dropdown-item dropdown-toggle" href="#" id="supercheck" data-bs-toggle="dropdown"> <b>Super Check Reports / Social Audit</b> </a>
+            <ul class="dropdown-menu dropdown-submenu" aria-labelledby="supercheck">
+                <li><a class="dropdown-item " href="superalloc"> Supervisory Allotment Count </a></li>
+							
+				<li><a class="dropdown-item" href="superchck"> District Wise Allotment of Supervisory Checks </a></li>
+				
+				<li><a class="dropdown-item " href="ddapsuperchk"> District Wise Super Check Redressed Report </a></li>
+				
+				<li><a class="dropdown-item" href="superchkintf"> Mandal-Wise Supervisory Check Report</a></li>
+				
+				<li><a class="dropdown-item " href="ddapcorrection"> District Wise Social Audit Grievance Redressed Report </a></li>
+            </ul>
+        </li>
+        
+         <li> <a class="dropdown-item dropdown-toggle" href="#" id="physical" data-bs-toggle="dropdown"> <b>Physical / Digital Acknowledgement</b> </a>
+            <ul class="dropdown-menu dropdown-submenu" aria-labelledby="physical">
+                <li><a class="dropdown-item" href="physicalack">Physical Acknowledgement District Wise Report</a></li>
+							
+				<li><a class="dropdown-item " href="distwisedigiack">Digital Acknowledgement District Wise Report(SMS)</a></li>
+            </ul>
+        </li>
+        
+    </ul>
+</li>
+                     
+<li  sec:authorize="hasAuthority('17')"> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>SPECIAL REPORTS</b> </a>
+     <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+		 <li><a class="dropdown-item " href="variety"> Variety wise Report(RBK)</a></li> 
+											
+		 <li><a class="dropdown-item" href="rofrextbook">Data Source Wise Extent And Booking Report</a></li>
+				
+		 <li><a class="dropdown-item" href="redownload">Redownloaded	Count</a></li>
+				
+		 <li><a class="dropdown-item " href="ddapsocialaudit">District Wise Kharif 2023 Social Audit Grievances Redressed Report </a></li>
+            
+         <li><a class="dropdown-item " href="unsurveyed">Unsurveyed Unsettled Details </a></li>
+
+		 <li><a class="dropdown-item " href="unsurveyedvill">Unsurveyed Unsettled Village Wise Report</a></li>
+			  
+		 <li><a class="dropdown-item " href="mandalwiseempalloc">Report On Mandal Wise Employees Allocation</a></li>
+			  
+		 <li><a class="dropdown-item" href="unlockextddap">Report On Unlock Extent</a></li>
+			  
+<!--		 <li><a class="dropdown-item" href="#">Report on Damaged Jowar and Maize crops</a></li>-->
+      </ul>
+</li>               
+       
+       
+<li   sec:authorize="hasAuthority('17')"> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>DETAILED REPORTS</b> </a>
+     <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+		<li><a class="dropdown-item" href="bookdet">Report on Booking Details RBK Wise</a></li>
+		
+		<!--		<li><a class="dropdown-item" href="photo">Crop Booking Details</a></li>-->
+
+		<li><a class="dropdown-item" href="farmerecrop">Farmer Details</a></li>
+		
+      </ul>
+</li>               
+       
+       
+<li   sec:authorize="hasAuthority('17')"> <a class="dropdown-item dropdown-toggle" href="#" id="ekycDropdown" data-bs-toggle="dropdown"> <b>MIS REPORTS</b> </a>
+     <ul class="dropdown-menu dropdown-submenu" aria-labelledby="ekycDropdown">
+		<li><a class="dropdown-item" href="dkrish">Report on D-Krishi vs eCrop</a></li>
+		
+		<li><a class="dropdown-item" href="topsixcrops">Report On Top Six Crops(Extent)</a></li>		
+
+		<li><a class="dropdown-item" href="irrigidwise">Irrigation Method wise Report </a></li>
+		
+		<li><a class="dropdown-item " href="irrirbkwise">Irrigation Method wise Report(RBK Wise)</a></li>
+		
+		<li><a class="dropdown-item" href="crdistvwise">Single/Inter/Mixed Area booked</a></li>
+		
+		<li><a class="dropdown-item " href="typefarmdet">Farming wise Area Booked </a></li>
+		
+		<li><a class="dropdown-item " href="irrisrcdet">Irrigation Source wise Area Booked </a></li>
+		
+		<li><a class="dropdown-item" href="ownerdwise">Land Ownership Details District Wise</a></li>
+
+		<li><a class="dropdown-item" href="ownervwise">Land Ownership Details Village Wsie</a></li>
+      </ul>
+</li>                
+                     
+					
+                     
+                     
+                     
+                     
+                     
+                     
+
+
+							
+									
+
+
+
+<!--						<li><a class="dropdown-item " href="bookingkhata">-->
+<!--								Abstract Report On Excess Booking By Khata No </a></li>-->
+
+<!--						<li><a class="dropdown-item " href="bookingsurvey">Abstract-->
+<!--								Report On Excess Booking By Survey No</a></li>-->
+
+<!--						<li><a class="dropdown-item" href="crdistvwise">First-->
+<!--								Crop Details</a></li>-->
+
+<!-- 								<li><a class="dropdown-item" href="irrigimwise">Type of -->
+<!-- 								Irrigation Method(mandal wise)</a></li> -->
+
+<!--						<li><a class="dropdown-item" href="cropinsclaim">District-->
+<!--								Wise Crop Insurance Claims</a></li>-->
+
+
+
+							</ul>
+
+
+
+							<!--MAO Reports -->
+
+
+
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Registration </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+											href="#"><b>Registration</b></a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item" href="empL">Mapped
+											Employees List</a>
+<!--									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"-->
+<!--											href="repvaadet2">Report On VAA Details</a></li>-->
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+											href="devregdett1">Device Registration Details</a>
+								</ul>
+							</li>
+
+
+
+
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Abstract Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item" href="#"><b>Abstract
+												Reports</b></a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+											href="rbksnomaping">Report On Allotment of SurveyNo's</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item" href="rofr">Data
+											Source Wise Extent And Booking Report</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item " href="landdatadet">
+											Report On Preparation Land Data Details</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item "
+											href="dwnlddetintf">Data Downloaded Details For Crop Booking</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item "
+											href="nonwebview">Non Web Land Entry Details</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item" href=cropbmao> Crop
+											Booking Details</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item"
+											href="farmerdetails">Crop Booking Farmer List</a></li>
+									<li sec:authorize="hasAuthority('5')"><a class="dropdown-item "
+											href="crpwrbkext">Abstract On RBK Wise Booked Extent</a></li>
+									<li><a class="dropdown-item" href="efblkext">e-fish Blocked Extent</a></li>
+									<li><a class="dropdown-item" href="pernnialmand">Perennial Crops</a></li>
+									<li><a class="dropdown-item" href="objunobj">Objectionable Un-Objectionable LAND
+											codes</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Detailed Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="datasrc">Data Source Wise Booking Extent</a></li>
+									<li><a class="dropdown-item" href="allocatedSnoMap">Detail Report on RBK Allocated
+											Survey No</a></li>
+									<li><a class="dropdown-item" href="efishRofr">Report on ROFR Details/e-Fish Data</a>
+									</li>
+									<li><a class="dropdown-item" href="allSno">Detailed Report on VAA/VHA/VSA selected
+											Survey Nos for Crop Booking </a></li>
+									<li><a class="dropdown-item" href="farmdet">Daily Report On Crop Booking</a></li>
+									<li><a class="dropdown-item" href="allcrops">Extent Booked For All Crops</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Normal Areas </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#"><b>Normal Areas</b></a></li>
+									<li><a class="dropdown-item" href="normal">Report On Normal Areas Mao</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Special Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#"><b>Special Reports</b></a></li>
+									<li><a class="dropdown-item" href="cropins"> Crop Insurance Grievance Details
+											Kharif-2022</a></li>
+									<li><a class="dropdown-item" href="cropinsabs">Crop Insurance Abstract Report
+											Kharif-2022</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>EKYC </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#"><b>EKYC</b></a></li>
+									<li><a class="dropdown-item " href="authmaoekycvaavaro">Report on VAA/VRO
+											Authentication And Farmer eKyc</a></li>
+									<li><a class="dropdown-item" href="ekycmao">RBK Wise Crop wise Report on VAA, VRO,
+											Farmer eKyc Authentication</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Supercheck/Social Audit Reports</b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#"><b>Supercheck/Social Audit Reports</b></a>
+									</li>
+									<li><a class="dropdown-item" href="supchkra"> Supervisory Check Records Allotted</a>
+									</li>
+									<li><a class="dropdown-item" href="supchkappr">Supervisory Check Approved Report</a>
+									</li>
+									<li><a class="dropdown-item" href=supchkk>Supervisory Check Rejected Report</a></li>
+									<li><a class="dropdown-item" href=supchkrejreport> Supervisory Officers Remarks</a>
+									</li>
+									<li><a class="dropdown-item " href="supupdsts">Supervisory Records Updation
+											Status</a></li>
+									<li><a class="dropdown-item " href="repsupchkvill"> Village-Wise Supervisory Check
+											Report </a></li>
+									<li><a class="dropdown-item " href="maosocialauditR">Village Wise Rabi 2022-2023
+											Social Audit Grievances Redressed Report</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('5')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Physical/ Digital Acknowledgement </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#"><b>Physical/ Digital Acknowledgement</b></a>
+									</li>
+									<li><a class="dropdown-item " href="phyackvwise">Village wise Physical Ack
+											Report</a></li>
+									<li><a class="dropdown-item " href="phyackrbk">RBK wise Physical Ack Report</a></li>
+								</ul>
+							</li>
+
+							<!--RDO Reports -->
+							<li sec:authorize="hasAuthority('46')"><a class="dropdown-item" href="supchk">Supervisory
+									Check Report</a></li>
+
+							<li sec:authorize="hasAuthority('46')"><a class="dropdown-item"
+									href="supervisoryPending">Supervisory
+									Check Pending</a></li>
+
+							<!-- 		<li><a class="dropdown-item " href="seedVariety">Add Seed Variety</a></li> -->
+
+
+							<li sec:authorize="hasAuthority('46')"><a class="dropdown-item"
+									href="cropwiseextbookedrep">Cropwise
+									Extent Booked</a></li>
+
+
+							<!--RBK Reports -->
+
+							<li sec:authorize="hasAuthority('25')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Detailed Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#" style="font-size:14px;"><b>Detailed Reports
+											</b> </a></li>
+									<hr class="dropdown-divider border-2" style="margin: auto 0px;">
+									<!--<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="Perfwd">
+											Report on Perennial forwarded Status During Kharif 2023 </a></li>
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="PerNotFrwdDet"> Report on Perennial not forwarded Status During Kharif
+											2023 </a></li>-->
+									<!-- <li><a class="dropdown-item" href="Rep_vaa_social_audit.jsp"> e-Crop Kharif-2023 Draft List </a></li>-->
+								<!--	<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="StatusOnSurveyNoExt"> Report on Booked Status </a></li>-->
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="datasrcwiseCnt"> Report on Records Downloaded By Data Source </a></li>
+											<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="AlloSrvyNo">
+											Detail Report on VAA/VHA/VSA selected Survey Nos with Geo-Referred Value</a>
+									</li>
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="CropbkingdetVA">Crop Booked Details </a></li>
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="efishvaadets">Efish Blocked Extent </a></li>
+									<!--  <li><a class="dropdown-item" href="Rep_RBK_SurveyNo_Mapping.jsp"> Report On Allotment of Survey No</a></li> -->
+									
+									
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="DataSrcWiseBkedExt"> Data Source wise Extent Booked </a></li>
+									<!-- <li><a class="dropdown-item" href="Rep_vaa_draft_list.jsp"> e-Crop Draft List </a></li>-->
+								
+									<!-- <li><a class="dropdown-item"  href="Rep_unlockdetails_VAA.jsp">Detailed Report On Unlocked Extent</a></li>-->
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="surveynodetIntf">Survey No Selection Status /ROFR Details /Unsurveyed
+											Unsettled Survey Nos </a></li>
+									<!-- <li><a class="dropdown-item" href="SuperMroMaoRejected.jsp">List of SUPER CHECK Records Rejected By MAO & MRO</a></li>
+                                 <li><a class="dropdown-item" href="MroMaoRejected.jsp">List of Records Rejected By MAO & MRO</a></li>
+                                <li><a class="dropdown-item" href="superChk_rejReport.jsp"> Supervisory Officers  Remarks</a></li>
+                               <li><a class="dropdown-item" href="Rep_legalheir.jsp">Legal Heir Details</a></li>  
+                                -->
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item"
+											href="vroRejIntf">VRO Rejected Details</a></li>
+<!--									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="SupChkUpdSts">-->
+<!--											Super Check Records Updation Status</a></li>-->
+<!--									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="superchkrej">-->
+<!--											Supervisory Officers Remarks</a></li>-->
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="Vaadraftlist">
+											e-Crop Draft List</a></li>
+												<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="pndingphyack">
+											Pending Physical Ack List </a></li>
+									<li sec:authorize="hasAuthority('25')"><a class="dropdown-item" href="vaafinallist">
+											e-Crop Kharif 2023 Final List </a></li>
+								</ul>
+							</li>
+
+
+
+							<li sec:authorize="hasAuthority('25')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>EKYC </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#" style="font-size:14px;"><b>eKYC</b> </a></li>
+									<hr class="dropdown-divider border-2" style="margin: auto 0px;">
+									<li><a class="dropdown-item" href="Arbkvaavroekyc">e-Kyc Report</a></li>
+									<li><a class="dropdown-item" href="VaaAuthCompl">List of Farmers Completed VAA
+											Authentication</a></li>
+									<li><a class="dropdown-item" href="VaaAuthPend">List of Farmers Pending for VAA
+											Authentication </a></li>
+									<li><a class="dropdown-item" href="VroAuthCompl">List of Farmers Completed VRO
+											Authentication</a></li>
+									<li><a class="dropdown-item" href="VroAuthPend">List of Farmers Pending for VRO
+											Authentication </a></li>
+									<li><a class="dropdown-item" href="RBKekycompltd">List of Farmers Completed eKyc</a>
+									</li>
+									<li><a class="dropdown-item" href="ekycauthpendingIntf">List of Pending Farmers for
+											eKyc</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('25')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>MIS Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li><a class="dropdown-item" href="#" style="font-size:14px;"><b>MIS Reports</b>
+										</a></li>
+									<hr class="dropdown-divider border-2" style="margin: auto 0px;">
+									<li><a class="dropdown-item" href="nwbview">Non Web Entry Details</a></li>
+									<li><a class="dropdown-item" href="./searchFormbykhsno">Search Form By Khata And
+											SurveyNo</a></li>
+									<li><a class="dropdown-item" href="SearchBybookingId"> Track Booking ID</a></li>
+									<li><a class="dropdown-item" href="searchByUID"> Search Booking Details by
+											Aadhaar</a></li>
+									<li><a class="dropdown-item" href="VsPerennialIntf">Perennial Crops</a></li>
+								</ul>
+							</li>
+					</li>
+					<!-- <li sec:authorize="hasAuthority('25')"><a
+								class="dropdown-item" href="Perfwd">Report on Perennial
+									forwarded Status During Kharif 2023</a></li> -->
+
+					<!--									  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+					<!--									<li sec:authorize="hasAuthority('25')"><a-->
+					<!--								class="dropdown-item" href="datasrcwiseCnt">Report on-->
+					<!--									Records Downloaded by DataSource</a></li>-->
+
+
+					<!--									<li sec:authorize="hasAuthority('25')"><a-->
+					<!--								class="dropdown-item" href="AlloSrvyNo">Detailed Report on VAA/VHA/VSA selected Survey Nos for Crop Booking</a></li>-->
+
+					<!--							<li sec:authorize="hasAuthority('25')"><a-->
+					<!--								class="dropdown-item" href="StatusOnSurveyNoExt">Report on-->
+					<!--									Booked Status</a></li>-->
+
+
+					<!--
+                                <li><a class="dropdown-item" href="rofrEntryView.jsp">ROFR Entry Details</a></li>
+                                   <li><a class="dropdown-item" href="notDownloadedView.jsp">WebLand Not Downloaded Entry Details</a></li>-->
+
+
+					<!--                         </ul>-->
+
+
+					<!--     HO Reports         -->
+
+
+					<!--							<ul class="dropdown-menu" aria-labelledby="reportsDropdown" sec:authorize="hasAuthority('22')">-->
+
+					<!--														<li><a class="dropdown-item" href="#">District Wise Abstract on Extent Booked</a></li>-->
+					<!--														<li><a class="dropdown-item" href="#">State Wide Crop Report</a></li>-->
+					<!--														<li><a class="dropdown-item" href="crop">Report On Crop Booking Details Mao</a></li>-->
+					<!--							<li>------------Abstract Reports-----------------------------</li>-->
+					
+					
+					<li sec:authorize="hasAuthority('22')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Abstract Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+										<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="abstractreport">Absract Report
+							On Extent Booked</a></li>
+					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item"
+							href="irrigartionabstract">Irrigation wise Absract Report On Crop Booking</a></li>
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('22')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Detailed Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+							<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="villagewise">Report On Village
+							Wise Normal Area Entry </a></li>
+					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="cropwise">Report on village
+							wise normal Area By Cropwise</a></li>
+							<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href=cropbookingdetailsho> Report On
+							Crop Booking Details</a></li>
+								</ul>
+							</li>
+					
+					
+					
+					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="unlockho">Detail Report on
+							UnlockExtent</a></li>
+					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="reportonunlockedextent">Report
+							On Unlocked Extent</a></li>
+					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="searchkhata"> Search form by
+							KhataNo/Survey number</a></li>
+<!--					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="supervisoryRecordsAllot">-->
+<!--							Supervisory Verification List</a></li>-->
+<!--					<li sec:authorize="hasAuthority('22')"><a class="dropdown-item" href="supervisoryRep"> Supervisory-->
+<!--							Check Report</a></li>-->
+					
+
+					<!--									</ul>-->
+
+
+					<!-- 								<li sec:authorize="hasAuthority('22')"><a -->
+					<!-- 								class="dropdown-item" href="reportonunlockedextent">Report on HO Unlock Extent</a></li> -->
+
+
+
+
+
+					<!-- JC Reports -->
+
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="cropwiseextbookedrep">Cropwise
+							Extent Booked</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekyc">Report on VAA/VRO
+							Authentication And Farmer eKyc</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekycd">Crop wise
+							district report on VAA/VRO Authentication and farmer ekyc</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekycsp">Super
+							verification pending list</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekycm">Crop wise mandal
+							report on VAA/VRO Authentication and farmer ekyc</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekycsv">Supervisory
+							Verification List</a></li>
+					<li sec:authorize="hasAuthority('44')"><a class="dropdown-item" href="farmerekycsr">Supervisory
+							Check Report</a></li>
+
+					<!-- TAH or MRO Reports -->
+
+					<li sec:authorize="hasAuthority('2')"><a class="dropdown-item" href="unServeyedReports">UnServeyed
+							Unsettled Details</a></li>
+					<li sec:authorize="hasAuthority('2')"><a class="dropdown-item"
+							href="unsrvyedUnsettldReportVillageWise">Unsrvyed
+							Unsettld VillageWise Report</a></li>
+
+					<!-- DC Reports -->
+
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="cropwiseextbookedrep">Cropwise
+							Extent Booked</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekyc">Report on VAA/VRO
+							Authentication And Farmer eKyc</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekycd">Crop wise
+							district report on VAA/VRO Authentication and farmer ekyc</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekycsp">Super
+							verification pending list</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekycm">Crop wise mandal
+							report on VAA/VRO Authentication and farmer ekyc</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekycsv">Supervisory
+							Verification List</a></li>
+					<li sec:authorize="hasAuthority('45')"><a class="dropdown-item" href="farmerekycsr">Supervisory
+							Check Report</a></li>
+
+
+
+					<!-- DHO reports -->
+
+					<li sec:authorize="hasAuthority('19')"><a class="dropdown-item" href="cropwiseextbookedrep">Cropwise
+							Extent Booked</a></li>
+					<li sec:authorize="hasAuthority('19')"><a class="dropdown-item btn btn-primary"
+							href="dhoCropBookingDetails">Report on Crop Booking Details</a></li>
+
+					<!-- ADA Reports -->
+					<li sec:authorize="hasAuthority('31')"><a class="dropdown-item" href="cropwiseextbookedrep">Cropwise
+							Extent Booked</a></li>
+
+					<!-- 	ADH Reports -->
+					<!-- 								<li sec:authorize="hasAuthority('21')"><a -->
+					<!-- 								class="dropdown-item" href="cropwiseextbookedrep">Report On Farmer Booking Details</a></li> -->
+
+					<!-- 	VRO -->
+					<!--							<li sec:authorize="hasAuthority('30')"><a-->
+					<!--								class="dropdown-item" href="datasrcwiseCnt">Report on-->
+					<!--									Records Downloaded by DataSource</a></li>-->
+
+
+		<!--VRO Reports -->
+
+<li sec:authorize="hasAuthority('30')">
+								<a class="dropdown-item" href="cropbookingdetails">Crop Booking Details</a>
+							</li>
+							<li sec:authorize="hasAuthority('30')">
+								<a class="dropdown-item" href="vrorej">VRO Rejection Details</a>
+							</li>
+							<li sec:authorize="hasAuthority('30')">
+								<a class="dropdown-item" href="searchformbykhasno">Search Form By Khata And Survery No</a>
+							</li>
+
+					<!--DAO Reports -->
+					
+					<li sec:authorize="hasAuthority('9')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Registration </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="repvaadet">VAA/VHA/VSA
+							Registration Details</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="devregdett">Device Registration
+							Details</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="VillageSecretariatList">RBK
+							list</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="RbkVsRevenue">Village
+							Secretariats Vs Revenue Villages</a></li>
+								</ul>
+							</li>
+
+
+
+
+							<li sec:authorize="hasAuthority('9')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Abstract Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+										<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="phyackmwise">Physical
+							Acknowledgement Mandal wise Report</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="abstractExtentBooked">Abstract
+							Report on Extent Booked</a></li>
+
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="daosocialauditR">Mandal Wise
+							Social Audit Redressed Report</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="cropInsGrev">Report On Crop
+							Insurance Grievance Details(Kharif 2022)</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="digitalACKSMS">Digital
+							Acknowledgement Mandal Wise Report(SMS)</a></li>
+
+		<li sec:authorize="hasAuthority('9')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>SuperCheck Report </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+										<li sec:authorize="hasAuthority('9')"><a class="dropdown-item "
+							href="supervisoryRecordsAlloted">Supervisory
+							Verification List</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="supervisoryReport">Supervisory
+							Check Report</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="supercheckrevenue">Mandal-Wise
+							Supervisory Check Report</a></li>
+
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item "
+							href="mandasuperchckredressed">Mandal
+							Wise Super Check Redressed Report</a></li>
+								</ul>
+							</li>
+
+								</ul>
+							</li>
+							<li sec:authorize="hasAuthority('9')">
+								<a class="dropdown-item" href="#" id="transactionDropdown" data-bs-toggle="dropdown">
+									<b>Detailed Reports </b> &raquo;
+								</a>
+								<ul class="dropdown-menu dropdown-submenu" aria-labelledby="transactionDropdown">
+									<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="mandalwiseEKYC">Department
+							Wise-Mandal Wise Report on eKYC</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="dataSourceExt">Data Source
+							Wise
+							Extent And Booking Report</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="farmerwisecropbooking">Report
+							on Farmer Crop Booking Details</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="mandalNormalAreas">Mandal Wise
+							Normal Areas Entry</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="normalVsextent">Crop Wise
+							Normal Area Vs Extent Booked</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="daoCropBookingDetails">Crop
+							Booking Details</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item " href="damagedJowarMaize">Report on
+							Damaged Jowar and Maize Crops</a></li>
+					<li sec:authorize="hasAuthority('9')"> <a class="dropdown-item" href="repAuthDAOvaavroekyc">Report
+							on VAA/VRO Authentication and Farmer eKyc</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="repAuthDAOrbkvaavroekyc">Report
+							RBK Wise on VAA/VRO Authentication and Farmer eKyc</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="repAuthDAOcropwisedist">Crop
+							Wise District Report on VAA/VRO Authentication and Farmer eKyc</a></li>
+					<li sec:authorize="hasAuthority('9')"><a class="dropdown-item" href="repAuthDaocropwise">Crop Wise
+							Mandal Report on VAA/VRO Authentication and Farmer eKyc</a></li>
+								</ul>
+							</li>
+
+				</ul>
+				</ul>
+				</ul>
+									
+				<!--					<li class="nav-item" style="margin-left: 85px;"></li>-->
+				<!--					<li class="nav-item"><a class="nav-link text-white"-->
+				<!--						href="./login">LOGOUT</a></li>-->
+				<!--				</ul>-->
+				<a class="nav-link text-white" style="margin-left: 85px;" href="logout">LOGOUT</a>
+			</div>
+		</div>
+	</nav>
+</form>

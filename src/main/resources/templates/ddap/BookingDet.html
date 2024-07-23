@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<script>
+		$(document).ready(function () {
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+
+		function getCrop() {
+			$.ajax({
+				type: "get",
+				url: "./util/getAllCrop",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropid").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+
+		}
+
+
+
+		$(document).ready(function () {
+			$.ajax({
+				type: "get",
+				url: "./util/getAllwbdcode",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#district").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		function getMandals() {
+			var district = $("#district").val();
+			var wbmcode = $("#inputmcode").val();
+			  $("#inputmcode").empty();
+			$.ajax({
+				type: "get",
+				url: "./util/getAllwbmandals?wbdcode=" + district,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#inputmcode").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		}
+
+		//village//
+
+		function getVillages() {
+			var district = $("#district").val();
+			var wbmcode = $("#inputmcode").val();
+			  $("#inputvcode").empty();
+			$.ajax({
+				type: "get",
+				url: "./util/getAllwbvcode?wbdcode=" + district + "&wbmcode=" + wbmcode,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#inputvcode").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		}
+
+		
+		function getData() {
+			var sno = 0;
+			  $("#databody").empty();
+			var cropyear = $("#cropyear").val();
+
+			var cropid = $("#cropid").val();
+
+			var district = $("#district").val();
+
+			var wbmcodenew = $("#inputmcode").val();
+
+			var wbvcode = $("#inputvcode").val();
+
+			$.ajax({
+				type: "get",
+				url: "./util/getbookdet?cropyear=" + cropyear + "&cropid=" + cropid + "&wbdcode=" + district + "&wbmcodenew=" + wbmcodenew
+					+ "&wbvcode=" + wbvcode,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						$("#databody").append('<tr>'
+							+ '<td style="width:2%">' + sno + '</td>'
+							+ '<td style="width:5%">' + bean.lgdvname + '</td>'
+							+ '<td style="width:5%">' + bean.vname + '</td>'
+							+ '<td style="width:10%">' + bean.bookingid + '</td>'
+							+ '<td style="width:10%">' + bean.occupname + '</td>'
+							+ '<td style="width:10%">' + bean.occupfname + '</td>'
+							+ '<td style="width:5%">' + bean.kh_no + '</td>'
+							+ '<td style="width:5%">' + bean.cr_sno + '</td>'
+							+ '<td style="width:5%">' + bean.cropname + '</td>'
+							+ '<td style="width:7%">' + bean.varietyname + '</td>'
+							+ '<td style="width:7%">' + bean.cr_mix_unmix_ext + '</td>'
+							+ '<td style="width:1%">' + bean.seed_production + '</td>'
+
+							+ '</tr>');
+					}
+				}
+			});
+		}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Report On RBK Wise Crop Booking Details</b>
+		</div>
+		<br>
+		<div align="center">
+			<form>
+				<table>
+					<div>
+						<div> <b> Crop year </b>
+							<select id="cropyear" name="cropyear" style="width: 150px" onchange="return getCrop(); ">
+								<option value="">-------Select-------</option>
+							</select>&numsp;&numsp;&numsp;&numsp;
+
+							<b> Crop </b>
+							<select id="cropid" name="cropid" style="width: 200px" onclick="return getCrop();">
+								<option value="">-------Select-------</option>
+							</select>&numsp;&numsp;&numsp;&numsp;
+
+							<b> District </b>
+							<select id="district" name="district" style="width: 150px" onchange="return getMandals();">
+								<option value="">-------Select-------</option>
+							</select>&numsp;&numsp;&numsp;&numsp;
+
+							<b> Mandal </b>
+							<select id="inputmcode" name="mandal" style="width: 150px "
+								onchange="return getVillages();">
+								<option value="">-------Select-------</option>
+							</select>&numsp;&numsp;&numsp;&numsp;
+
+							<b> Village </b>
+							<select id="inputvcode" name="village" style="width: 150px">
+								<option value="">-------Select-------</option>
+							</select>
+						</div>
+					</div>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+
+
+		<div>
+			<form name="unlockreport" method="post">
+				<div id="divPrint" class="table table-hover">
+					<table id="tableStkId" align="center" style="width: 100%;">
+						<thead style="color: white;">
+							<tr>
+								<th> <b> S.No </b> </th>
+								<th> <b> Village </b> </th>
+								<th> <b> RBK Name </b> </th>
+								<th> <b> Booking ID </b> </th>
+								<th> <b> Farmer Name </b> </th>
+								<th> <b> Father Name </b> </th>
+								<th> <b> Khata No </b> </th>
+								<th> <b> Survey No </b> </th>
+								<th> <b> Crop Name </b> </th>
+								<th> <b> Variety </b> </th>
+								<th> <b> Extent </br> (In Acres) </b> </th>
+								<th> <b> Seed </br> Prod. </b> </th>
+							</tr>
+						</thead>
+						<tbody id="databody"> </tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

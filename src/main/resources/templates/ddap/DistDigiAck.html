@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+
+	</head>
+	<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+	
+	<script>
+// 	VALIDATION
+	function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    if (cropyear == "") {
+	    $('#loading').hide();
+
+        alert("Please select a Crop Year");
+        return false;
+    }
+    return true;
+}
+	
+	
+	
+	
+		$(document).ready(function () {
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		function getData() {
+			$("#databody").empty();
+		    $('#loading').show();
+		    var sno = 0;
+		    if (validateForm()) {
+			var cropYear = $("#cropyear").val();
+			$.ajax({
+				type: "get",
+				url: "./util/getdistack?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+				    $('#loading').hide();
+
+					var totSmsCnt = 0, sentSmsCnt = 0, remSmsCnt = 0;
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+
+						var bean = resp[j];
+
+						totSmsCnt = totSmsCnt + bean.totSmsCnt;
+						sentSmsCnt = sentSmsCnt + bean.sentSmsCnt;
+						remSmsCnt = remSmsCnt + bean.remSmsCnt;
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.dname + '</td>'
+							+ '<td>' + bean.totSmsCnt + '</td>'
+							+ '<td>' + bean.sentSmsCnt + '</td>'
+							+ '<td>' + bean.remSmsCnt + '</td>'
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2">TOTAL<b></b></td>'
+						+ '<td>' + totSmsCnt + '</td>'
+						+ '<td>' + sentSmsCnt + '</td>'
+						+ '<td>' + remSmsCnt + '</td>'
+						+ '</tr>')
+				}
+			});
+		}
+	}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div>
+			<h1 style="font-size: 150%;padding-left: 37%;">Digital Acknowledgment SMS Report</h1>
+		</div>
+		<br>
+		
+		<div id="loading" style="display: none;">
+       	Loading...
+		</div>
+		
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					<tr>
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="right" width="30%"><b>Crop Year</b></td>
+
+						<td align="left">
+							<select id="cropyear" name="cropyear" style="width: 200px">
+							<option value="">----Select----</option></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div class="container">
+			<form name="unlockreport" method="post">
+				<div align="center" id="divPrint">
+					<table id="tableStkId" align="center" style="width: 50%;" class="table table-hover">
+						<thead style="color: white;">
+							<tr>
+								<th> Sno </th>
+								<th> District </th>
+								<th> Total Booking IDs </th>
+								<th> SMS Sent </th>
+								<th> SMS Remaining </th>
+							</tr>
+						</thead>
+						<tbody id="databody">
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+</head>
+<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+	
+<script>
+//	VALIDATION
+function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    // Check if district is selected
+    if (cropyear == "") {
+	    $('#loading').hide();
+        alert("Please select a Crop Year");
+        return false;
+    }
+
+    // Add more validations here if needed
+
+    return true;
+}
+
+
+		$(document).ready(function () {
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					//alert(JSON.stringify(resp));
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		function getData() {
+			$("#databody").empty();
+		    $('#loading').show();
+		    var sno = 0;
+			 if (validateForm()) {
+
+			var cropYear = $("#cropyear").val();
+			//alert("cropYear=============>" + cropYear);
+			$.ajax({
+				type: "get",
+				url: "./util/getrofrext?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+				    $('#loading').hide();
+					//alert(JSON.stringify(resp));
+					<!--					fro totals-->
+					var web_farmers = 0, web_ext = 0, nweb_farmers = 0, nweb_ext = 0, ccrc_farmers = 0,
+						ccrc_ext = 0; rofr_farmers = 0, rofr_ext = 0, usus_farmers = 0, usus_ext = 0, b = 0, b1 = 0,
+							a = 0, a1 = 0;
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						web_farmers = web_farmers + parseFloat(bean.web_farmers);
+						web_ext = web_ext + parseFloat(bean.web_ext);
+						web_ext1 = web_ext.toFixed(2);
+						
+						nweb_farmers = nweb_farmers + parseFloat(bean.nweb_farmers);
+						nweb_ext = nweb_ext + parseFloat(bean.nweb_ext);
+						nweb_ext1 = nweb_ext.toFixed(2);
+						
+						ccrc_farmers = ccrc_farmers + parseFloat(bean.ccrc_farmers);
+						ccrc_ext = ccrc_ext + parseFloat(bean.ccrc_ext);
+						ccrc_ext1 = ccrc_ext.toFixed(2);
+						
+						rofr_farmers = rofr_farmers + parseFloat(bean.rofr_farmers);
+						rofr_ext = rofr_ext + parseFloat(bean.rofr_ext);
+						rofr_ext1 = rofr_ext.toFixed(2);
+						
+						usus_farmers = usus_farmers + parseFloat(bean.usus_farmers);
+						usus_ext = usus_ext + parseFloat(bean.usus_ext);
+						usus_ext1 = usus_ext.toFixed(2);
+
+
+
+						a = parseFloat(bean.web_farmers) + parseFloat(bean.nweb_farmers) +
+						    parseFloat(bean.ccrc_farmers) + parseFloat(bean.rofr_farmers) + parseFloat(bean.usus_farmers);
+						a1 = parseFloat(bean.web_ext) + parseFloat(bean.nweb_ext) + 
+						     parseFloat(bean.ccrc_ext) + parseFloat(bean.rofr_ext) + parseFloat(bean.usus_ext);
+						a11 = a1.toFixed(2);
+						
+						
+						b = b + a;
+						
+						b1 = b1 + a1;
+						b11 = b1.toFixed(2);
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.wbedname + '</td>'
+							+ '<td>' + bean.web_farmers + '</td>'
+							+ '<td>' + bean.web_ext + '</td>'
+							+ '<td>' + bean.nweb_farmers + '</td>'
+							+ '<td>' + bean.nweb_ext + '</td>'
+							+ '<td>' + bean.ccrc_farmers + '</td>'
+							+ '<td>' + bean.ccrc_ext + '</td>'
+							+ '<td>' + bean.rofr_farmers + '</td>'
+							+ '<td>' + bean.rofr_ext + '</td>'
+							+ '<td>' + bean.usus_farmers + '</td>'
+							+ '<td>' + bean.usus_ext + '</td>'
+							+ '<td>' + a + '</td>'
+							+ '<td>' + a11 + '</td>'
+
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2">TOTAL<b></b></td>'
+						+ '<td>' + web_farmers + '</td>'
+						+ '<td>' + web_ext1 + '</td>'
+						+ '<td>' + nweb_farmers + '</td>'
+						+ '<td>' + nweb_ext1 + '</td>'
+						+ '<td>' + ccrc_farmers + '</td>'
+						+ '<td>' + ccrc_ext1 + '</td>'
+						+ '<td>' + rofr_farmers + '</td>'
+						+ '<td>' + rofr_ext1 + '</td>'
+						+ '<td>' + usus_farmers + '</td>'
+						+ '<td>' + usus_ext1 + '</td>'
+						+ '<td>' + b + '</td>'
+						+ '<td>' + b11 + '</td>'
+
+						+ '</tr>')
+
+				}
+			});
+		}
+	}
+	</script>
+<style>
+table thead {
+	background-color: grey;
+}
+</style>
+
+<body>
+	<div class="heading" colspan="20"
+		style="text-align: center; background-color: white; font-size: 20px;">
+		<b>Data Source Wise Extent And Booking Report</b>
+	</div>
+	<br>
+
+	<div align="center">
+		<form>
+			<table id="ObjEntryTable">
+				<tr>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td align="right" width="30%"><b>Crop Year</b></td>
+
+					<td align="left"><select id="cropyear" name="cropyear"
+						style="width: 200px">
+						<option value="">----Select----</option></select></td>
+				</tr>
+			</table>
+			<div colspan="3" align="center"
+				style="padding-top: 10px; padding-bottom: 10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary"
+					value="Submit" onclick="return getData();">Submit</button>
+			</div>
+		</form>
+	</div>
+
+
+	<div>
+		<form method="post">
+			<div align="center" id="divPrint">
+				<table id="tableStkId" align="center" style="width: 90%;"
+					class="table table-striped border border-secondary">
+					<thead style="color: white;">
+						<tr>
+							<th rowspan="2"><b> S.No. </b></th>
+							<th rowspan="2"><b>District</b></th>
+							<th colspan="2"><b> Webland</b></th>
+							<th colspan="2"><b> Non-Webland</b></th>
+							<th colspan="2"><b> CCRC </b></th>
+							<th colspan="2"><b> ROFR </b></th>
+							<th colspan="2"><b> Unsettled/Unservey </b></th>
+							<th colspan="2"><b> Total </b></th>
+						</tr>
+						<tr>
+							<th>Farmer</th>
+							<th>Extent</th>
+							<th>Farmer</th>
+							<th>Extent</th>
+							<th>Farmer</th>
+							<th>Extent</th>
+							<th>Farmer</th>
+							<th>Extent</th>
+							<th>Farmer</th>
+							<th>Extent</th>
+							<th>Farmer</th>
+							<th>Extent</th>
+						</tr>
+					<tbody id="databody">
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color: black">
+			<input class="btn btn-primary"
+				name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint"
+				onClick="javascript:CallPrint('divPrint')" value="Print"> <input
+				class="btn btn-primary" type="button"
+				onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+	</div>
+</body>
+
+</html>

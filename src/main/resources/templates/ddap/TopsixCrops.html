@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<script>
+		$(document).ready(function () {
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+	
+		function getData() {
+				var sno = 0;
+			$("#databody").empty();
+			var cropYear = $("#cropyear").val();
+			$.ajax({
+				type: "get",
+				url: "./util/getsixcrops?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+
+					var paddy = 0, cotton = 0, redChillies = 0, groundnut = 0, mango = 0, redgram = 0;
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						paddy = paddy + parseInt(bean.paddy);
+						cotton = cotton + parseInt(bean.cotton);
+						redChillies = redChillies + parseInt(bean.redChillies);
+						groundnut = groundnut + parseInt(bean.groundnut);
+						mango = mango + parseInt(bean.mango);
+						redgram = redgram + parseInt(bean.redgram);
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.dname + '</td>'
+							+ '<td>' + bean.paddy + '</td>'
+							+ '<td>' + bean.cotton + '</td>'
+							+ '<td>' + bean.redChillies + '</td>'
+							+ '<td>' + bean.groundnut + '</td>'
+							+ '<td>' + bean.mango + '</td>'
+							+ '<td>' + bean.redgram + '</td>'
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2" style="align:right">TOTAL<b></b></td>'
+						+ '<td>' + paddy + '</td>'
+						+ '<td>' + cotton + '</td>'
+						+ '<td>' + redChillies + '</td>'
+						+ '<td>' + groundnut + '</td>'
+						+ '<td>' + mango + '</td>'
+						+ '<td>' + redgram + '</td>'
+						+ '</tr>')
+				}
+			});
+		}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Top Six
+				CXrops</b>
+		</div>
+		<br>
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					<tr>
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="right" width="30%"><b>Crop Year</b></td>
+
+						<td align="left">
+							<select id="cropyear" name="cropyear" style="width: 200px"></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div class="container">
+			<form name="unlockreport" method="post">
+				<div align="center" id="divPrint" class="table table-hover">
+					<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+						<thead style="color: white;">
+							<tr>
+								<th> <b> S.No. </b> </th>
+								<th> <b>District</b> </th>
+								<th> <b>Paddy </b> </th>
+								<th> <b>Cotton</b> </th>
+								<th> <b>RedChillies</b> </th>
+								<th> <b>Groundnut</b> </th>
+								<th> <b>Mango</b> </th>
+								<th> <b>Redgram</b> </th>
+							</tr>
+						</thead>
+						<tbody id="databody">
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

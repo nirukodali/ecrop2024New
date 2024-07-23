@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+<script>
+ 
+function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    if (cropyear == "") {
+        alert("Please select a Crop Year");
+        return false;
+    }
+
+
+    return true;
+}
+
+
+	$(document).ready(function () {
+		$("#loading").hide();
+		$.ajax({
+			type: "get",
+			url: "./util/getAllSeason",
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				for (var j = 0; j < resp.length; j++) {
+					var bean = resp[j];
+					$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+				}
+			}
+		});
+	});
+
+	
+	function getData() {
+	    $('#loading').show();
+		$("#databody").empty();
+		var sno = 0;
+		 if (validateForm()) {
+		var cropYear = $("#cropyear").val();
+		$.ajax({
+			type: "get",
+			url: "./util/dkrishi1?cropyear=" + cropYear,
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				$("#loading").hide();
+				
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+					var bean = resp[j];
+					
+
+					$("#databody").append('<tr>'
+						+ '<td>' + sno + '</td>'
+						+ '<td>' + '<a href="./mand1?wbdcode=' + bean.wbdcode + '&cropyear=' + cropYear + '">' + bean.dname + '</a>' + '</td>'
+						+ '<td>' + bean.nof + '</td>'
+						+ '<td>' +  bean.qty + '</td>'
+						+ '<td>' + bean.no_same + '</td>'
+						+ '<td>' + bean.no_others + '</td>'
+						+ '<td>' + bean.no_noecrop + '</td>'
+						+ '<td>' + bean.qty_nocrop + '</td>'
+
+						+ '</tr>');
+				}
+// 				$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+// 						+ '<td colspan = "2">TOTAL<b></b></td>'
+// 						+ '<td>' + totrevvill + '</td>'
+// 						+ '<td>' + totprepareddatavill + '</td>'
+// 						+ '<td>' + tabdownloadedvill + '</td>'
+// 						+ '<td>' + totallps + '</td>'
+// 						+ '<td>' + totlps_downloaded + '</td>'
+// 						+ '<td>' + a + '</td>'
+
+// 						+ '</tr>')
+
+			}
+		});
+	}
+}
+</script>
+<style>
+	table thead {
+    background-color: grey;
+}
+</style>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> D-Krishi - eCrop (District Wise)</b>
+	</div>
+<br>
+
+<div id="loading" style="display: none;">
+       	Loading...
+		</div>\
+		
+	<div align="center">
+<!-- 		<form> -->
+			<table id="ObjEntryTable">
+				<tr>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td align="right" width="30%"><b>Crop Year</b></td>
+
+					<td align="left">
+						<select id="cropyear" name="cropyear" style="width: 200px">
+						<option value="">----Select----</option></select>
+					</td>
+				</tr>
+			</table>
+			<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+					onclick="return getData();">Submit</button>
+			</div>
+<!-- 		</form> -->
+	</div>
+	<div class="container">
+		<form  name="unlockreport" method="post" action="./distmand">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+					<thead style="color: white;">
+						 <tr>
+                        <th> </th>
+                        <th> </th>
+                        <th></th>
+                        <th colspan="2" align="center"> Data from D-Krishi</th>
+                        <th colspan="1"> Same crop found in e-crop also</th>
+                        <th colspan="1"> Crop booked in e-crop is different from crop registered in D-Krishi </th>
+                        <th colspan="2">Name of D-Krishi farmer not found in e-Crop data  </th>
+                    </tr>  
+                    <tr>
+                        <th> <b> S.No. </b> </th>
+                        <th> <b> District </b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> Qty in Kgs</b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> No of Farmers </b> </th>
+                        <th> <b> No of Farmers  </b> </th>
+                        <th> <b> Qty taken </b> </th>
+                    </tr>
+					</thead>
+					<tbody id="databody">
+						
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

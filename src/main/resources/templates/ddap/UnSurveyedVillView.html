@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="header"></head>
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var Unset_est = parseFloat(row.children[4].textContent);
+				total += Unset_est;
+			});
+			document.getElementById('totalUnset_est').textContent = total;
+		});
+
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var Unset_inam = parseFloat(row.children[5].textContent);
+				total += Unset_inam;
+			});
+			document.getElementById('totalUnset_inam').textContent = total;
+		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var Unsurveyed_est = parseFloat(row.children[6].textContent);
+				total += Unsurveyed_est;
+			});
+			document.getElementById('totalUnsurveyed_est').textContent = total;
+		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var Unsurveyed_Inam = parseFloat(row.children[7].textContent);
+				total += Unsurveyed_Inam;
+			});
+			document.getElementById('totalUnsurveyed_Inam').textContent = total;
+		});
+	</script>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b> UnSurveyed UnSettled Village Wise Details
+			</b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table style="width: 90%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th> <b> S.No. </b> </th>
+							<th> <b>District </b> </th>
+							<th> <b> Mandal </b> </th>
+							<th> <b> Village </b> </th>
+							<th> <b> UnSettled Estate </b> </th>
+							<th> <b> UnSettled Inam </b> </th>
+							<th> <b>UnSurveyed Estate </b> </th>
+							<th> <b>UnSurveyed Inam </b> </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="unsurveyedvilldeati ,stat: ${unsurveyedvill}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${unsurveyedvilldeati.wbdname}"></td>
+							<td align="left" th:text="${unsurveyedvilldeati.wbmname}"></td>
+							<td align="left" th:text="${unsurveyedvilldeati.wbvname}"></td>
+							<td align="right" th:text="${unsurveyedvilldeati.Unset_est}"></td>
+							<td align="right" th:text="${unsurveyedvilldeati.Unset_inam}"></td>
+							<td align="right" th:text="${unsurveyedvilldeati.Unsurveyed_est}"></td>
+							<td align="right" th:text="${unsurveyedvilldeati.Unsurveyed_Inam}"></td>
+						</tr>
+
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td style="font-size: 18px;"> <b>Total</b> </td>
+							<td colspan="4"></td>
+							<td th:id="totalUnset_est"></td>
+							<td th:id="totalUnset_inam"></td>
+							<td th:id="totalUnsurveyed_est"></td>
+							<td th:id="totalUnsurveyed_Inam"></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</form>
+
+
+		</div>
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

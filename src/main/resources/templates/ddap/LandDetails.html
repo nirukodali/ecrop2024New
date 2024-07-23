@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	</head>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b>Report On District Wise Land Data Preperation 
+			</b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table style="width: 90%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th> <b> Sno </b> </th>
+							<th> <b> District </b> </th>
+							<th> <b> Total Revenue Villages </b> </th>
+							<th> <b> No.of Villages Downloaded </b> </th>
+							<th> <b> No.of Villages Not Downloaded </b> </th>
+							<th> <b> No.of Records Downloaded From Web Land </b> </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="landdet ,stat: ${land}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left"><a th:href="@{./mandlanddet(dcode=${landdet.dcode})}"
+									th:text="${landdet.dname}"></a></td>
+							<td align="right" th:text="${landdet.totrev}"></td>
+							<td align="right" th:text="${landdet.downloadedcnt}"></td>
+							<td align="right" th:text="${landdet.notdownloadedcnt}"></td>
+							<td align="right" th:text="${landdet.totrec}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+
+
+		<div align="center">
+			<a th:href="@{/login}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

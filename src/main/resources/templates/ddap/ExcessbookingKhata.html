@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var approved = parseInt(row.children[6].textContent);
+				total += approved;
+			});
+			document.getElementById('totalApproved').textContent = total;
+		});
+
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var attempted = parseInt(row.children[5].textContent);
+				total += attempted;
+			});
+			document.getElementById('totalattempted').textContent = total;
+		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var deleted = parseInt(row.children[5].textContent);
+				total += deleted;
+			});
+			document.getElementById('totaldeleted').textContent = total;
+		});
+
+	</script>
+
+	
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b> Abstract Report On Excess Booking By Khatha
+				No
+			</b>
+		</div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table style="width: 90%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th> S.No</th>
+							<th> District</th>
+							<th> Mandal </th>
+							<th> Village </th>
+							<th> RBK </th>
+							<th> To be Attempted </th>
+							<th> Approved </th>
+							<th> Deleted </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="detai ,stat: ${list}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${detai.wbedname}"></td>
+							<td align="left" th:text="${detai.wbemname}"></td>
+							<td align="left" th:text="${detai.wbevname}"></td>
+							<td align="left" th:text="${detai.vname}"></td>
+							<td align="right" th:text="${detai.yet_to_attempt}"></td>
+							<td align="right" th:text="${detai.approved_by_mao}"></td>
+							<td align="right" th:text="${detai.deleted}"></td>
+						</tr>
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td style="font-size: 20px;"> <b>Total</b> </td>
+							<td colspan="5"></td>
+							<td th:id="totalattempted"></td>
+							<td th:id="totalApproved"></td>
+							<td th:id="totaldeleted"></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</form>
+
+		</div>
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

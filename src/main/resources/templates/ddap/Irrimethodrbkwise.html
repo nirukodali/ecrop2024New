@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+	<script>
+// 	VALIDATION
+	function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    if (cropyear == "") {
+	    $('#loading').hide();
+
+        alert("Please select a Crop Year");
+        return false;
+    }
+    return true;
+}
+
+
+
+		$(document).ready(function () {
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		var sno = 0;
+		function getData() {
+			$("#databody").empty();
+		    $('#loading').show();
+		    if (validateForm()) {
+			var cropYear = $("#cropyear").val();
+			$.ajax({
+				type: "get",
+				url: "./util/getirrimethod?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					$('#loading').hide();
+
+					var cf = 0, ce = 0, df = 0, de = 0,
+						sf = 0, se = 0, rf = 0, re = 0,
+						b1 = 0, b2 = 0;
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						cf = cf + bean.cf;
+						ce = ce + bean.ce;
+						df = df + bean.df;
+						de = de + bean.de;
+						sf = sf + bean.sf;
+						se = se + bean.se;
+						rf = rf + bean.rf;
+						re = re + bean.re;
+
+
+						a1 = bean.cf + bean.df + bean.sf + bean.rf;
+						a2 = bean.ce + bean.de + bean.se + bean.re;
+
+						b1 = b1 + a1;
+						b2 = b2 + a2;
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.wbdname + '</td>'
+							+ '<td>' + bean.wbmname + '</td>'
+							+ '<td>' + bean.wbvname + '</td>'
+							+ '<td>' + bean.cf + '</td>'
+							+ '<td>' + bean.ce + '</td>'
+							+ '<td>' + bean.df + '</td>'
+							+ '<td>' + bean.de + '</td>'
+							+ '<td>' + bean.sf + '</td>'
+							+ '<td>' + bean.se + '</td>'
+							+ '<td>' + bean.rf + '</td>'
+							+ '<td>' + bean.re + '</td>'
+							+ '<td>' + a1 + '</td>'
+							+ '<td>' + a2 + '</td>'
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "4">TOTAL<b></b></td>'
+						+ '<td>' + cf + '</td>'
+						+ '<td>' + ce + '</td>'
+						+ '<td>' + df + '</td>'
+						+ '<td>' + de + '</td>'
+						+ '<td>' + sf + '</td>'
+						+ '<td>' + se + '</td>'
+						+ '<td>' + rf + '</td>'
+						+ '<td>' + re + '</td>'
+						+ '<td>' + b1 + '</td>'
+						+ '<td>' + b2 + '</td>'
+						+ '</tr>')
+				}
+			});
+		}
+	}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b>
+				Irrigation Source wise Details</b>
+		</div>
+		<br>
+		<!-- LoadingSpinner -->	
+		<div id="loading" style="display: none;">
+       	Loading...
+		</div>
+		
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					<tr>
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="right" width="30%"><b>Crop Year</b></td>
+
+						<td align="left">
+							<select id="cropyear" name="cropyear" style="width: 200px">
+							<option value="">----Select----</option></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+
+		<div>
+			<form id="unlockreport" name="unlockreport" method="post">
+				<div align="center" id="divPrint" class="table table-hover ">
+					<table id="tableStkId" style="width:100%;">
+						<thead>
+							<tr>
+								<th width="2%" rowspan="2"> Sl.No </th>
+								<th width="15%" rowspan="2"> <b> District </b> </th>
+								<th width="15%" rowspan="2"> <b> Mandal </b> </th>
+								<th width="15%" rowspan="2"> <b> Village </b> </th>
+								<th width="10%" colspan="2"> <b> Conventional </b> </th>
+								<th width="10%" colspan="2"> <b> Drip Irrigation </b> </th>
+								<th width="10%" colspan="2"> <b> Sprinkler </b> </th>
+								<th width="10%" colspan="2"> <b> Rain Fed </b> </th>
+								<th width="10%" colspan="2"> <b> Total </b> </th>
+
+							<tr style="text-align: right;">
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres) </th>
+								<th> Farmers </th>
+								<th> Extent (Acres)</th>
+							</tr>
+
+						</thead>
+						<tbody id="databody">
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black;margin-top: 20px;">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+	</body>
+
+</html>

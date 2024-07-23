@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header">
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="./js/jquery/jquery.cookie.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<!--	 Include DataTables JS -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+	<!-- Include DataTables CSS -->
+
+	<style>
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+
+		select {
+			padding: 1.5px;
+			border: none;
+			margin-bottom: 5px;
+			border-radius: 5px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-auto ">
+				<div class="card card-body text-center fw-bold" style="background-color: #e6e2d3;">
+					<form>
+						<div class="card-title">
+							<h4
+								style="background-color: darkgreen; color: white; width: auto; text-align: center; padding: 7px;border: none;border-radius: 5px;">
+								Cropvarieties</h4>
+							<br />
+						</div>
+						<div align="center" id="divPrint">
+                            <table align="center" style="width:100%;background-color: #e6e2d3;">
+                                <tr>
+                                    <td class="tdnum"><b>Select Crop Group <font color="red">*</font></b></td>
+                                    <td width="50%">
+                                        <select name="cropgroupname" id="cropgroupid" style="width: 200px">
+                                            <option value="0">----------Select----------</option>
+                                            <option th:each="cropgroup: ${cropgroups}" th:value="${cropgroup.cropgrpid}" th:text="${cropgroup.grpname}"></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p id="displayText"></p>
+
+	<table id="customers">
+
+		<thead>
+			<tr class="bg-info">
+				<th><b>S.No</b></th>
+				<th class="text-center">Crop Group Code</th>
+				<th class="text-center">Crop Group Name</th>
+				<th class="text-center">Crop Name</th>
+				<th class="text-center">Crop Name(English)</th>
+				<th class="text-center">Variety Code</th>
+				<th class="text-center">Variety Name</th>
+				<th class="text-center">Crop Code</th>
+				<th class="text-center">Release Days</th>
+				<th class="text-center">New Release Days</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+	</div>
+	</div>
+	</div>
+	</table>
+	
+	<script>
+		// Execute the AJAX call to get table data when cropname is selected
+		$('#cropgroupid').on('change', function () {
+			var grpcode = $(this).val();
+			$.get("./getCropVarieties/" + grpcode, function (tableData) {
+				//alert(JSON.stringify(tableData));
+				$('#customers tbody').empty();
+				if (tableData.length > 0) {
+					$.each(tableData, function (i, rowData) {
+						//alert(JSON.stringify(rowData.cropnamesFCVR.cropgroupsFCVR));
+						var row = $('<tr>');
+						$('<td>').text(i + 1).appendTo(row); // S.No.
+
+						$('<td class="text-center">').text(rowData.cropnamesFCVR.cropgroupsFCVR.cropgrpid).appendTo(row);
+						$('<td class="text-center">').text(rowData.cropnamesFCVR.cropgroupsFCVR.grpname).appendTo(row);
+						$('<td class="text-center">').text(rowData.cropnamesFCVR.cropname).appendTo(row);
+						$('<td class="text-center">').text(rowData.cropnamesFCVR.cropnameeng).appendTo(row);
+						$('<td class="text-center">').text(rowData.varietycode).appendTo(row);
+						$('<td class="text-center">').text(rowData.varietyname).appendTo(row);
+						$('<td class="text-center" >').text(rowData.cropnamesFCVR.cropid).appendTo(row);
+						$('<td class="text-center">').text(rowData.releasedays).appendTo(row);
+						$('<td class="text-center">').text(rowData.newreleasedays).appendTo(row);
+						row.appendTo('#customers tbody');
+					});
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>	

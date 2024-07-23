@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	</head>
+	<script>
+		//==============VAA==============
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var VAA = parseFloat(row.children[3].textContent);
+				total += VAA;
+			});
+			document.getElementById('totalVAA').textContent = total;
+		});
+
+		//=================VHA=======================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var VHA = parseFloat(row.children[4].textContent);
+				total += VHA;
+			});
+			document.getElementById('totalVHA').textContent = total;
+		});
+
+		//================VSA===================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var VSA = parseFloat(row.children[5].textContent);
+				total += VSA;
+			});
+			document.getElementById('totalVSA').textContent = total;
+		});
+
+
+		//===========================AEO=============================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var AEO = parseFloat(row.children[6].textContent);
+				total += AEO;
+			});
+			document.getElementById('totalAEO').textContent = total;
+		});
+
+
+		//======================MPEO==================================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var MPEO = parseFloat(row.children[7].textContent);
+				total += MPEO;
+			});
+			document.getElementById('totalMPEO').textContent = total;
+		});
+
+		//====================================VFA=============================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var VFA = parseFloat(row.children[8].textContent);
+				total += VFA;
+			});
+			document.getElementById('totalVFA').textContent = total;
+		});
+
+		//============================ATM===========================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var ATM = parseFloat(row.children[9].textContent);
+				total += ATM;
+			});
+			document.getElementById('totalATM').textContent = total;
+		});
+
+		//================================BTM========================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var BTM = parseFloat(row.children[10].textContent);
+				total += BTM;
+			});
+			document.getElementById('totalBTM').textContent = total;
+		});
+
+
+		//========================NOPOST============================
+		document.addEventListener("DOMContentLoaded", function () {
+			var rows = document.querySelectorAll('tbody tr');
+			var total = 0;
+			rows.forEach(function (row) {
+				var NOPOST = parseFloat(row.children[11].textContent);
+				total += NOPOST;
+			});
+			document.getElementById('totalNOPOST').textContent = total;
+		});
+	</script>
+
+	<body>
+		<div class="heading" style="text-align:center;font-size: 150%;"><b>Report On Mandal Wise Employees Allocation
+			</b></div>
+
+		<form action="#" method="POST">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table style="width: 80%;">
+					<thead align="center">
+						<div style="font-weight: bolder;">
+							<th> S.No </th>
+							<th> District </th>
+							<th> Mandal </th>
+							<th> VAA </th>
+							<th> VHA </th>
+							<th> VSA </th>
+							<th> AEO </th>
+							<th> MPEO </th>
+							<th> VFA </th>
+							<th> ATM </th>
+							<th> BTM </th>
+							<th> No POST </th>
+						</div>
+					</thead>
+
+					<tbody>
+						<tr th:each="mandallocdet ,stat: ${mandalloc}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left" th:text="${mandallocdet.vsdname}"></td>
+							<td align="left" th:text="${mandallocdet.vsmname}"></td>
+							<td align="right" th:text="${mandallocdet.VAA}"></td>
+							<td align="right" th:text="${mandallocdet.VHA}"></td>
+							<td align="right" th:text="${mandallocdet.VSA}"></td>
+							<td align="right" th:text="${mandallocdet.AEO}"></td>
+							<td align="right" th:text="${mandallocdet.MPEO}"></td>
+							<td align="right" th:text="${mandallocdet.VFA}"></td>
+							<td align="right" th:text="${mandallocdet.ATM}"></td>
+							<td align="right" th:text="${mandallocdet.BTM}"></td>
+							<td align="right" th:text="${mandallocdet.NOPOST}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td style="font-size: 18px;"> <b>Total</b> </td>
+							<td colspan="2" style="text-align: right;"></td>
+							<td style="text-align: right;" th:id="totalVAA"></td>
+							<td style="text-align: right;" th:id="totalVHA"></td>
+							<td style="text-align: right;" th:id="totalVSA"></td>
+							<td style="text-align: right;" th:id="totalAEO"></td>
+							<td style="text-align: right;" th:id="totalMPEO"></td>
+							<td style="text-align: right;" th:id="totalVFA"></td>
+							<td style="text-align: right;" th:id="totalATM"></td>
+							<td style="text-align: right;" th:id="totalBTM"></td>
+							<td style="text-align: right;" th:id="totalNOPOST"></td>
+						</tr>
+					</tfoot>
+
+				</table>
+			</div>
+		</form>
+
+
+		<div align="center">
+			<a th:href="@{/}"> Back</a>
+
+		</div>
+	</body>
+
+</html>

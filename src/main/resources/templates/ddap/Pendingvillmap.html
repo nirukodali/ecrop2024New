@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<script>
+// 	VALIDATION
+function validateForm() {
+	$("#loadingsign").hide();
+    var district = document.getElementById("district").value;
+
+    // Check if district is selected
+    if (district == "") {
+        alert("Please select a district");
+        return false;
+    }
+
+    // Add more validations here if needed
+
+    return true;
+}
+
+
+		$(document).ready(function () {
+			$("#loadingsign").hide();
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllwbdcode",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#district").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		
+		function getData() {
+			$("#loadingsign").show();
+			var sno = 0;
+			$("#databody").empty();
+			 if (validateForm()) {
+			var district = $("#district").val();
+			$.ajax({
+				type: "get",
+				url: "./util/getvillmap?wbdcode=" + district,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					$("#loadingsign").hide();
+					//alert(JSON.stringify(resp));
+
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.wbdcode + '</td>'
+							+ '<td>' + bean.wbdname + '</td>'
+							+ '<td>' + bean.wbmcode + '</td>'
+							+ '<td>' + bean.wbmname + '</td>'
+							+ '<td>' + bean.wbvcode + '</td>'
+							+ '<td>' + bean.wbvname + '</td>'
+
+							+ '</tr>');
+					}
+				}
+			});
+		}
+	}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Pending
+				Village Mapping List</b>
+		</div>
+		<br>
+		
+		<!-- LoadingSpinner -->	
+	<div id="loadingsign">
+	<div class="d-flex justify-content-center" >
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+	</div>
+</div>
+
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					
+					<tr>
+						<td align="right" width="30%"><b> District </b></td>
+
+						<td align="left">
+							<select id="district" name="district" style="width: 200px">
+							<option value="">----Select----</option></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div class="container">
+			<form name="unlockreport" method="post">
+				<div align="center" id="divPrint" class="table table-hover">
+					<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+						<thead style="color: white;">
+							<tr>
+								<th> <b> S.No. </b> </th>
+								<th> <b> District Code </b> </th>
+								<th> <b> District Name </b> </th>
+								<th> <b> Mandal Code </b> </th>
+								<th> <b> Mandal Name </b> </th>
+								<th> <b> Village Code </b> </th>
+								<th> <b> Village Name </b> </th>
+							</tr>
+						</thead>
+						<tbody id="databody">
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

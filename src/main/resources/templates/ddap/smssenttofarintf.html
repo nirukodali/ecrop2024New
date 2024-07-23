@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Acknowledgment SMS</title>
+    <style>
+        body {
+            background-color: #e8e8e8;
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 35%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .heading {
+            font-size: 20px;
+            background-color: lightgrey;
+            color: #0956a4;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        select {
+            width: 190px;
+            height: 30px;
+        }
+
+        input[type="button"] {
+            font-size: 15px;
+            background-color: #0956a4;
+            color: white;
+            font-weight: bold;
+            line-height: 30px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:insert="headerImage"></div>
+    <div th:insert="navBarTop"></div>
+    <div th:insert="headerMessage"></div>
+    <head th:insert="header"></head>
+
+    <form id="f1" name="f1">
+        <div align="center">
+            <table colspan="4">
+                <tr>
+                    <td colspan="4" class="heading">Digital Acknowledgment SMS</td>
+                </tr>
+                <tr>
+                    <td>&emsp;</td>
+                    <td>&emsp;</td>
+                    <td align="right"><b>Crop Year<font color="red">*</font></b></td>
+                    <td>
+                        <select id="cropyear" name="cropyear" style="width: 190px" onchange="getmandals()">
+                            <!-- Include options for crop years dynamically -->
+                            <option value="" disabled selected>Select Crop Year</option>
+                            <option th:each="season : ${activeSeasons}" th:value="${season.seasonvalue}"
+                                th:text="${season.cropyear}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&emsp;</td>
+                    <td>&emsp;</td>
+                    <td align="right"><b>District<font color="red">*</font></b></td>
+                    <td>
+                        <select id="dcode" name="dcode" style="width: 190px" onchange="getmandals()">
+                            <option value="" disabled selected>----Select DistrictName----</option>
+                            <!-- Populate options dynamically using Thymeleaf -->
+                            <option th:each="district : ${districtCodeAndDistrictName}" th:value="${district.wbdcode}"
+                                th:text="${district.dname}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&emsp;</td>
+                    <td>&emsp;</td>
+                    <td align="right"><b>Mandals<font color="red">*</font></b></td>
+                    <td>
+                        <select id="mcode" name="mcode" style="width:190px;height:140px" multiple>
+                            <option value="">--Select Mandals--</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="Submit" name="Submit" onclick="submitme()">
+            <input type="button" value="Go Back" onclick="back();">
+            <input type="hidden" id="mandals" name="mandals">
+        </div>
+    </form>
+    <script>
+    $(document).ready(function () {
+        $("#cropyear, #dcode").on("change", function () {
+            getMandals();
+        });
+    });
+
+    function getMandals() {
+        var districtCode = $("#dcode").val();
+        var selectedCropYear = $("#cropyear").val();
+
+        if (!selectedCropYear || !districtCode) {
+            $('#mcode').empty().append('<option value="" disabled selected>-- Select Mandals --</option>');
+            return;
+        }
+
+        $.ajax({
+            url: './rest/api/Digitalsms/getmcodewbemname',
+            method: 'GET',
+            data: { cropyear: selectedCropYear, districtcode: districtCode },
+            dataType: 'json',
+            success: function (response) {
+                populateMandalsDropdown(response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching mandals:', error);
+            }
+        });
+    }
+
+    function populateMandalsDropdown(data) {
+        var mandalsDropdown = $('#mcode');
+        mandalsDropdown.empty().append('<option value="" disabled selected>-- Select Mandals --</option>');
+
+        $.each(data, function (index, obj) {
+            mandalsDropdown.append('<option value="' + obj.mcode + '">' + obj.wbemname + '</option>');
+        });
+    }
+    function submitme() {
+        if (validateForm()) {
+            submitForm();
+        }
+    }
+
+    function validateForm() {
+        var cropyear = $("#cropyear").val();
+        var dcode = $("#dcode").val();
+        var selectedMandals = $("#mcode").val();
+
+        if (cropyear === '') {
+            alert("Please select Crop Year.");
+            return false;
+        }
+
+        if (dcode === '') {
+            alert("Please select District.");
+            return false;
+        }
+
+        if (!selectedMandals || selectedMandals.length === 0) {
+            alert("Please select Mandals. Use Ctrl for selecting multiple mandals.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function submitForm() {
+        var cropyear = $("#cropyear").val();
+        var dcode = $("#dcode").val();
+        var selectedMandals = $("#mcode").val();
+        var mandals = selectedMandals.join(',');
+
+        var formData = {
+            cropyear: cropyear,
+            dcode: dcode,
+            mandals: mandals
+        };
+
+        $.ajax({
+            url: './rest/api/Digital_ack_sms_action',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                var jsonResponse = JSON.parse(response);
+
+                // Access the properties and display them
+                console.log("smscount:", jsonResponse.smscount);
+
+                // Alert or use the values as needed
+                alert("smscount: " + jsonResponse.smscount);
+
+                // Reload the page if needed
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+        return false; // Prevent default form submission
+    }
+
+</script>
+
+</body>
+
+</html>

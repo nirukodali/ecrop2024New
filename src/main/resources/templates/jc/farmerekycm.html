@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="./js/jquery/jquery.cookie.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> <!-- Include DataTables JS -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+	<!-- Include DataTables CSS -->
+
+	<style>
+		#customers {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td,
+		#customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#customers tr:hover {
+			background-color: #ddd;
+		}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+
+		select {
+			padding: 1.5px;
+			border: none;
+			margin-bottom: 5px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<div th:insert="headerImage"></div>
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-auto">
+				<div class="card card-body" style="background-color: #e6e2d3;">
+					<form action="#" th:action="@{/crop-report}" method="post">
+						<div class="card-title">
+							<h4
+								style="background-color: darkgreen; color: white; width: auto; text-align: center; padding: 7px;border: none;border-radius: 5px;">
+								Crop wise mandal report on VAA/VRO Authentication and farmer ekyc</h4>
+							<br />
+						</div>
+						<div align="center" id="divPrint">
+							<table align="center" style="width:60%;background-color: #e6e2d3;">
+								<tr>
+									<td class="tdnum" colspan="2" style="width:50%"> <b>Crop Year <font color="red">*
+											</font>:</b> </td>
+									<td>
+										<select name="cropyear" id="cropyear" style="width: 200px">
+											<option value='' th:selected="0">------Select Crop Year--------</option>
+											<option th:each="cropyr: ${cropyears}" th:value="${cropyr.seasonvalue}"
+												th:text="${cropyr.cropyear}"></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="tdnum" colspan="2"><b>Crop Name :</b></td>
+									<td>
+										<select name="cropname" id="cropname" style="width: 200px">
+											<option value='0' th:selected="0">------Select Crop Name--------</option>
+											<option th:each="cropnme: ${cropnames}" th:value="${cropnme.cropid}"
+												th:text="${cropnme.cropname}"></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td align="center" colspan="3"> <input type="submit" class="btn btn-success mt-3"
+											value="Submit" onclick="submitForm()"></td>
+								</tr>
+							</table>
+							<br><br>
+							<th class="heading" colspan="3"><b> &nbsp;&nbsp; &nbsp;&nbsp;</b>
+							</th>
+							<tr>
+								<td class="heading tdnum" colspan="10">
+									<b>Report Time : <span th:text="${theDate}"></span></b>
+								</td>
+							</tr>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p id="displayText"></p>
+
+	<table id="customers">
+		<thead>
+			<tr>
+				<th><b>Sl.No</b></th>
+				<th><b>District Name</b></th>
+				<th><b>Mandal Name</b></th>
+				<th><b>No. of Farmers</b></th>
+				<th><b>Total Bookings</b></th>
+				<th><b>Total Extent (acres)</b></th>
+				<th><b>VAA Authentication Completed:Bookings</b></th>
+				<th><b>VAA Authentication Completed:Acres</b></th>
+				<th><b>VRO Authentication Completed:Bookings</b></th>
+				<th><b>VRO Authentication Completed:Acres</b></th>
+				<th><b>e-KYC Done Bookings</b></th>
+				<th><b>e-KYC Done Farmers</b></th>
+				<th><b>e-KYC Done Acres</b></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="crpreport, iterStat : ${cropreport}">
+				<td th:text="${iterStat.count}"></td>
+				<td th:text="${crpreport.wbdname}" class="text-center"></td>
+				<td th:text="${crpreport.wbmname}" class="text-center"></td>
+				<td th:text="${crpreport.totfarmercount}" class="text-center"></td>
+				<td th:text="${crpreport.totalbookings}" class="text-center"></td>
+				<td th:text="${crpreport.totextent}" class="text-center"></td>
+				<td th:text="${crpreport.vaaauthcount}" class="text-center"></td>
+				<td th:text="${crpreport.vaaauthextent}" class="text-center"></td>
+				<td th:text="${crpreport.vroauthcount}" class="text-center"></td>
+				<td th:text="${crpreport.vroauthextent}" class="text-center"></td>
+				<td th:text="${crpreport.totekycbookings}" class="text-center"></td>
+				<td th:text="${crpreport.ekycfarmercount}" class="text-center"></td>
+				<td th:text="${crpreport.ekycbookedext}" class="text-center"></td>
+			</tr>
+		</tbody>
+	</table>
+	<script>
+		$(document).ready(function () {
+			$('#customers').DataTable(); // Initialize DataTables on your table
+		});
+	</script>
+	<script>
+		function submitForm() {
+			var cropyear = $('#cropyear').val();
+			var cropname = $('#cropname').val();
+			if (cropyear == '') {
+				alert('Please select an option from the crop year.');
+				return false;
+			}
+			if (cropname == '0') {
+				alert('Please select an option from the crop name.');
+				return false;
+			}
+			$('#customers').DataTable(); // Initialize DataTables on your table
+
+			$('#myform').submit();
+
+		}
+		$(document).ready(function () {
+
+			// Execute the AJAX call to populate cropname dropdown
+			var cropyear = $('#cropyear').val(); // Get the value of crop year initially
+			$.get("./crop-report?cropyear=" + cropyear, function (cropnames) {
+				$('#cropname').empty().append('<option value="0">Select Crop Name</option>');
+				if (cropnames != '') {
+					var $select1 = $('#cropname');
+					$.each(cropnames, function (i, cropname) {
+						var option = $('<option>', {
+							value: cropname.cropid
+						}).html(cropname.cropname).appendTo($select1);
+					});
+				}
+			});
+		});
+		// Execute the AJAX call to get table data when cropname is selected
+		$('#cropname').on('change', function () {
+			var cropid = $(this).val();
+			$.get("./crop-report/" + cropyear + "/" + cropid, function (tableData) {
+				$('#customers tbody').empty();
+				alert("table data---->"+tableData);
+				if (tableData.length > 0) {
+					$.each(tableData, function (i, rowData) {
+						var row = $('<tr>');
+						$('<td>').text(i + 1).appendTo(row); // S.No.
+						$('<td>').text(rowData.wbdname).appendTo(row);
+						$('<td>').text(rowData.wbmname).appendTo(row);
+						$('<td>').text(rowData.totfarmercount).appendTo(row);
+						$('<td>').text(rowData.totalbookings).appendTo(row);
+						$('<td>').text(rowData.totextent).appendTo(row);
+						$('<td>').text(rowData.vaaauthcount).appendTo(row);
+						$('<td>').text(rowData.vaaauthextent).appendTo(row);
+						$('<td>').text(rowData.vroauthcount).appendTo(row);
+						$('<td>').text(rowData.vroauthextent).appendTo(row);
+						$('<td>').text(rowData.totekycbookings).appendTo(row);
+						$('<td>').text(rowData.ekycfarmercount).appendTo(row);
+						$('<td>').text(rowData.ekycbookedext).appendTo(row);
+						row.appendTo('#customers tbody');
+					});
+				}
+			});
+		});
+
+	</script>
+</body>
+
+</html>

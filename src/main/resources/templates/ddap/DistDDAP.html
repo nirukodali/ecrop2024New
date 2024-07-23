@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<script>
+// 	VALIDATION
+	function validateForm() {
+	    var cropyear = document.getElementById("cropyear").value;
+
+	    // Check if district is selected
+	    if (cropyear == "") {
+	        alert("Please select a Crop Year");
+	        return false;
+	    }
+
+	    // Add more validations here if needed
+
+	    return true;
+	}
+	
+	
+		$(document).ready(function () {
+			$("#loadingsign").hide();
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					//alert(JSON.stringify(resp));
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		
+		function getData() {
+			$("#loadingsign").show();
+			$("#databody").empty();
+			var sno = 0;
+			 if (validateForm()) {
+			var cropYear = $("#cropyear").val();
+			//alert("cropYear=============>" + cropYear);
+			$.ajax({
+				type: "get",
+				url: "./util/getdhafddap?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					$("#loadingsign").hide();
+					alert(JSON.stringify(resp));
+
+					var tmandals = 0, tvillages = 0,
+						dagri_mandals = 0, dagri_villages = 0, dagri_ext = 0, dagri_farmers = 0,
+						dhorti_mandals = 0, dhorti_villages = 0, dhorti_ext = 0, dhorti_farmers = 0,
+						dseri_mandals = 0, dseri_villages = 0, dseri_ext = 0, dseri_farmers = 0,
+						dsoc_mandals = 0, dsoc_villages = 0, dsoc_ext = 0, dsoc_farmers = 0,
+
+						b1 = 0, b2 = 0;
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+
+						a1 = parseInt(bean.dagri_ext) + parseInt(bean.dhorti_ext) + parseInt(bean.dseri_ext) + parseInt(bean.dsoc_ext);
+						a2 = parseInt(bean.dagri_farmers) + parseInt(bean.dhorti_farmers) + parseInt(bean.dseri_farmers) + parseInt(bean.dsoc_farmers)
+
+						tmandals = tmandals + parseInt(bean.tmandals);
+						tvillages = tvillages + parseInt(bean.tvillages)
+
+						dagri_mandals = dagri_mandals + parseInt(bean.dagri_mandals);
+						dagri_villages = dagri_villages + parseInt(bean.dagri_villages);
+						dagri_ext = dagri_ext + parseInt(bean.dagri_ext);
+						dagri_farmers = dagri_farmers + parseFloat(bean.dagri_farmers);
+
+						dhorti_mandals = dhorti_mandals + parseInt(bean.dhorti_mandals);
+						dhorti_villages = dhorti_villages + parseInt(bean.dhorti_villages);
+						dhorti_ext = dhorti_ext + parseInt(bean.dhorti_ext);
+						dhorti_farmers = dhorti_farmers + parseInt(bean.dhorti_farmers);
+
+						dseri_mandals = dseri_mandals + parseInt(bean.dseri_mandals);
+						dseri_villages = dseri_villages + parseInt(bean.dseri_villages);
+						dseri_ext = dseri_ext + parseInt(bean.dseri_ext);
+						dseri_farmers = dseri_farmers + parseInt(bean.dseri_farmers);
+
+						dsoc_mandals = dsoc_mandals + parseInt(bean.dsoc_mandals);
+						dsoc_villages = dsoc_villages + parseInt(bean.dsoc_villages);
+						dsoc_ext = dsoc_ext + parseInt(bean.dsoc_ext);
+						dsoc_farmers = dsoc_farmers + parseInt(bean.dsoc_farmers);
+
+						b1 = b1 + a1;
+						b2 = b2 + a2;
+
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							<!--							+ '<td>' + bean.wbdname + '</td>'-->
+							+ '<td><a href="your_link_here">' + bean.wbdname + '</a></td>'
+							+ '<td>' + bean.tmandals + '</td>'
+							+ '<td>' + bean.tvillages + '</td>'
+							+ '<td>' + bean.dagri_mandals + '</td>'
+							+ '<td>' + bean.dagri_villages + '</td>'
+							//+ '<td>' + bean.dagrinormalarea + '</td>'
+							+ '<td>' + bean.dagri_ext + '</td>'
+							+ '<td>' + bean.dagri_farmers + '</td>'
+
+							+ '<td>' + bean.dhorti_mandals + '</td>'
+							+ '<td>' + bean.dhorti_villages + '</td>'
+							//+ '<td>' + bean.dhortinormalarea + '</td>'
+							+ '<td>' + bean.dhorti_ext + '</td>'
+							+ '<td>' + bean.dhorti_farmers + '</td>'
+
+							//+ '<td>' + bean.dfish_mandals + '</td>'
+							//+ '<td>' + bean.dfish_villages + '</td>'
+							//+ '<td>' + bean.dfish_farmers + '</td>'
+							//+ '<td>' + bean.dfish_ext + '</td>'
+
+							+ '<td>' + bean.dseri_mandals + '</td>'
+							+ '<td>' + bean.dseri_villages + '</td>'
+							+ '<td>' + bean.dseri_ext + '</td>'
+							+ '<td>' + bean.dseri_farmers + '</td>'
+
+							//+ '<td>' + bean.dsnormalarea + '</td>'
+							//+ '<td>' + bean.dfisheriesnormalarea + '</td>'
+							//+ '<td>' + bean.dfnormalarea + '</td>'
+
+							+ '<td>' + bean.dsoc_mandals + '</td>'
+							+ '<td>' + bean.dsoc_villages + '</td>'
+							+ '<td>' + bean.dsoc_ext + '</td>'
+							+ '<td>' + bean.dsoc_farmers + '</td>'
+
+							//+ '<td>' + bean.dsocnormalarea + '</td>'
+
+							+ '<td>' + a1 + '</td>'
+							+ '<td>' + a2 + '</td>'
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2x">TOTAL<b></b></td>'
+						+ '<td>' + tmandals + '</td>'
+						+ '<td>' + tvillages + '</td>'
+
+						+ '<td>' + dagri_mandals + '</td>'
+						+ '<td>' + dagri_villages + '</td>'
+						+ '<td>' + dagri_ext + '</td>'
+						+ '<td>' + dagri_farmers + '</td>'
+
+						+ '<td>' + dhorti_mandals + '</td>'
+						+ '<td>' + dhorti_villages + '</td>'
+						+ '<td>' + dhorti_ext + '</td>'
+						+ '<td>' + dhorti_farmers + '</td>'
+
+						+ '<td>' + dseri_mandals + '</td>'
+						+ '<td>' + dseri_villages + '</td>'
+						+ '<td>' + dseri_ext + '</td>'
+						+ '<td>' + dseri_farmers + '</td>'
+
+						+ '<td>' + dsoc_mandals + '</td>'
+						+ '<td>' + dsoc_villages + '</td>'
+						+ '<td>' + dsoc_ext + '</td>'
+						+ '<td>' + dsoc_farmers + '</td>'
+
+						+ '<td>' + b1 + '</td>'
+						+ '<td>' + b2 + '</td>'
+
+						+ '</tr>')
+				}
+			});
+		}
+	}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b>
+				District Wise Status Report On All Crops</b>
+		</div>
+		<br>
+		
+		<!-- LoadingSpinner -->	
+	<div id="loadingsign">
+	<div class="d-flex justify-content-center" >
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+	</div>
+</div>
+
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					<tr>
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="right" width="30%"><b>Crop Year</b></td>
+
+						<td align="left">
+							<select id="cropyear" name="cropyear" style="width: 200px">
+							<option value="">----Select----</option></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div>
+			<form name="unlockreport" method="post">
+				<div align="center" id="divPrint" class="table table-hover">
+					<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+						<thead style="color: white;">
+							<tr>
+								<th rowspan="2"> <b> S.No. </b> </th>
+								<th align="center" rowspan="2"> <b> District </b> </th>
+								<th align="center" rowspan="2"> <b> Total Mandals </b> </th>
+								<th align="center" rowspan="2"> <b> Total Revenue</br> Villages </b> </th>
+
+								<th align="center" colspan="4">Agriculture</th>
+								<th align="center" colspan="4">Horticulture</th>
+								<th align="center" colspan="4">Sericulture</th>
+								<th align="center" colspan="4">Social Forestry</th>
+
+								<th align="center" colspan="2">Total</th>
+							</tr>
+
+							<tr>
+								<th> <b> Total Mandals </br>Covered </b></th>
+								<th> <b> Total Revenue</br> Villages Covered </b></th>
+								<th> <b> Extent</br>Booked(In Acres) </b></th>
+								<th> <b> No. of</br>Farmers </b> </th>
+
+								<th> <b> Total Mandals </br>Covered </b></th>
+								<th> <b> Total Revenue</br> Villages Covered </b></th>
+								<th> <b> Extent </br>Booked(In Acres)</b></th>
+								<th> <b> No. of</br>Farmers </b></th>
+
+								<th> <b> Total Mandals </br>Covered </b></th>
+								<th> <b> Total Revenue</br> Villages Covered </b></th>
+								<th> <b> Extent</br>Booked(In Acres)</b></th>
+								<th> <b> No. of</br>Farmers</b></th>
+
+								<th> <b> Total Mandals </br>Covered </b></th>
+								<th> <b> Total Revenue</br> Villages Covered </b></th>
+								<th> <b> Extent</br>Booked </b> </th>
+								<th> <b> No. of</br>Farmers </b> </th>
+
+								<th>Extent </br>Booked(In Acres) </th>
+								<th>No. of </br>Farmers </th>
+
+							</tr>
+
+						</thead>
+						<tbody id="databody">
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

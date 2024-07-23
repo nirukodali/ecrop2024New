@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Crop Ins Grev</title>
+<head th:insert="header"></head>
+<div th:insert="headerImage"></div>
+<div th:insert="navBarTop"></div>
+<div th:insert="headerMessage"></div>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script
+	src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	function CallPrint(strid) {
+		var prtContent = document.getElementById(strid);
+		var mywindow = window
+				.open(
+						'',
+						'',
+						'left=0,top=0,width=950,height=600,toolbar=1,scrollbars=1,status=1,addressbar=0');
+		var is_chrome = Boolean(mywindow.chrome);
+		mywindow.document.write(prtContent.innerHTML);
+		mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+		if (is_chrome) {
+			mywindow.onload = function() { // wait until all resources loaded 
+				mywindow.focus(); // necessary for IE >= 10
+				mywindow.print(); // change window to mywindow
+				mywindow.close(); // change window to mywindow
+			};
+		} else {
+			mywindow.document.close(); // necessary for IE >= 10
+			mywindow.focus(); // necessary for IE >= 10
+			mywindow.print();
+			mywindow.close();
+		}
+
+		return true;
+	}
+</script>
+<script language="javascript">
+	var tableToExcel = (function() {
+		var uri = 'data:application/vnd.ms-excel;base64,', template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table align="center">{table}</table></body></html>', base64 = function(
+				s) {
+			return window.btoa(unescape(encodeURIComponent(s)))
+		}, format = function(s, c) {
+			return s.replace(/{(\w+)}/g, function(m, p) {
+				return c[p];
+			})
+		}
+		return function(table, name) {
+			if (!table.nodeType)
+				table = document.getElementById(table)
+			var ctx = {
+				worksheet : name || 'Worksheet',
+				table : table.innerHTML
+			}
+			window.location.href = uri + base64(format(template, ctx))
+		}
+	})()
+</script>
+
+</head>
+<script>
+function handleNullValue(value) {
+    return (value !== null && value !== undefined) ? value : "--";
+}
+
+$("#loadingsign").show();
+	$(document).ready(
+			function() {
+				var dcode = $("#dcodee").val();
+				$.ajax({
+					type : "get",
+					url : "./util/dataCropGr?dcode=" + dcode,
+					cache : false,
+					timeout : 600000,
+					success : function(resp) {
+						$("#loadingsign").hide();
+						$("#databody").empty();
+					//	alert(JSON.stringify(resp));
+						var sno = 0;
+						for (var j = 0; j < resp.length; j++) {
+							sno = sno + 1;
+							var bean = resp[j];
+						    var old_varietyname = handleNullValue(bean.old_varietyname);
+
+							$("#databody").append(
+									'<tr style="fontsize:200px; font-weight: bold;">'
+											+ '<td align="center">' + sno+ '</td>' 
+											+ '<td align="center">'+ bean.wbdname + '</td>'
+											+ '<td align="center">'+ bean.wbmname + '</td>'
+											+ '<td align="center">'+ bean.wbvname + '</td>'
+											+ '<td align="center">'+ bean.claimid + '</td>'
+											+ '<td align="center">'+ bean.claim_type + '</td>'
+											+ '<td align="center">'+ bean.gri_type + '</td>'
+											+ '<td align="center">'+ bean.old_cropname + '</td>'
+											+ '<td align="center">'+ bean.new_cropname + '</td>'
+											+ '<td align="center">' +handleNullValue(bean.old_varietyname) + '</td>'
+											+ '<td align="center">'+ bean.new_varietyname + '</td>'
+											+ '<td align="center">'+ bean.old_extent + '</td>'
+											+ '<td align="center">'+ bean.new_extent + '</td>'
+											+ '<td align="center">'+ bean.old_name + '</td>'
+											+ '<td align="center">'+ bean.new_name + '</td>'
+											+ '<td align="center">'+ bean.old_uid + '</td>'
+											+ '<td align="center">'+ bean.newuid + '</td>'
+											+ '<td align="center">'+ bean.remarks + '</td>'
+											+ '</tr>');
+						}
+
+					}
+				});
+			});
+</script>
+<style>
+#ObjEntryTable {
+	border-collapse: separate;
+	border-spacing: 0 0.5em;
+}
+</style>
+<body>
+	<div class="heading" colspan="20" style="text-align: center;">
+		<h3>Report On Crop Insurance Grievance Details(Kharif 2022) ::
+			KHARIF 2022</h3>
+	</div>
+	<p th:text="${msg}"></p>
+<input type="hidden" id="dcodee" th:value="${#session.getAttribute('dcode')}" />
+<div id="loadingsign">
+		<div class="d-flex justify-content-center">
+			<div class="spinner-border" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+	</div>
+	 <div class="scrollable-container">
+		<form id="unlockreport" name="unlockreport" method="post">
+			<div align="center" id="divPrint"
+				class="table table-hover table table-striped">
+				<table id="tableStkId" align="center"
+					style="text-align: center; width: 70%;">
+					<thead>
+						<tr>
+							<th><b> S.No. </b></th>
+							<th><b> District </b></th>
+							<th><b> Mandal </b></th>
+							<th><b> Village</b></th>
+							<th><b> Claim Id</b></th>
+							<th><b> Claim Type</b></th>
+							<th><b> Grievance Type</b></th>
+							<th><b> Old Crop Name</b></th>
+							<th><b> New Crop Name</b></th>
+							<th><b> Old Variety Name</b></th>
+							<th><b> New Variety Name</b></th>
+							<th><b> Old Extent</b></th>
+							<th><b> New Extent</b></th>
+							<th><b> Old Name</b></th>
+							<th><b> New Name</b></th>
+							<th><b> Old UID</b></th>
+							<th><b> New UID</b></th>
+							<th><b> Remarks</b></th>
+						</tr>
+
+					</thead>
+					<tbody id="databody">
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color: black; margin-top: 20px;">
+			<input class="btn btn-primary"
+				name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint"
+				onClick="javascript:CallPrint('divPrint')" value="Print"> <input
+				class="btn btn-primary" type="button"
+				onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+
+		</div>
+	</div>
+</body>
+
+</html>

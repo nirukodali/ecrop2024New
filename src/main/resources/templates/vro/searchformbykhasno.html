@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Add your existing head content here -->
+
+    <!-- Bootstrap and related scripts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables scripts -->
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">-->
+<!--    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>-->
+<!--    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>-->
+
+<!--     DataTables Buttons Extension -->
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.2/css/buttons.bootstrap5.min.css">-->
+<!--    <script src="https://cdn.datatables.net/buttons/2.1.2/js/dataTables.buttons.min.js"></script>-->
+<!--    <script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.bootstrap5.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>-->
+<!--    <script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.html5.min.js"></script>-->
+<!--    <script src="https://cdn.datatables.net/buttons/2.1.2/js/buttons.print.min.js"></script>-->
+
+    <!-- Your custom styles -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <style>
+        /* CSS styles for the table */
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+    
+    
+
+   </head>
+
+
+<body>
+<div th:insert="headerImage"></div>
+<div th:insert="navBarTop"></div>
+<div th:insert="headerMessage"></div>
+
+<form name="form1" method="post" th:action="@{/searchformbykhataandsurveyno-report}">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-auto">
+					<div class="card card-body" style="background-color: #e6e2d3;">
+						<div class="card-title">
+							<h4
+								style="background-color: darkgreen; color: white; width: auto; text-align: center; padding: 7px; border: none; border-radius: 5px;">
+								Search Form By Khata And Survery No</h4>
+							<br />
+						</div>
+
+						<table align="center">
+							<tr>
+								<th colspan="2" class="heading"><b> </b></th>
+							</tr>
+							<tr>
+								<td class="tdnum" colspan="2" style="width: 50%"><b>Crop
+										Year <font color="red">*</font> :
+								</b></td>
+								<td><select name="cropyear" id="cropyearid"
+									style="width: 200px">
+										<option value="0" th:selected="0">------Select
+											CropYear--------</option>
+										<option th:each="cropyear: ${cropyears}"
+											th:value="${cropyear.seasonvalue}"
+											th:text="${cropyear.cropyear}"></option>
+								</select></td>
+							</tr>
+							<tr>
+								<td class="tdnum" colspan="2" style="width: 50%" ><b>Village
+										<font color="red">*</font> :
+								</b></td>
+								<td><select name="villagename" id="villageid"
+									style="width: 200px" class="mt-3">
+										<option value="0" th:selected="0">------Select
+											Village--------</option>
+										<option th:each="village: ${villages}"
+											th:value="${village.vcode}"
+											th:text="${village.wbvname}"></option>
+								</select></td>
+							</tr>
+							
+			<tr>
+				<td class="tdnum" colspan="2" style="width: 50%"><b>Search By
+						<font color="red">*</font> :
+					</b></td>
+				<td>
+					<select name="searchbyname" id="searchbyid" style="width: 200px;" class="mt-3" onchange="toggleTextbox()">
+						<option value="0" selected>------Select Search By--------</option>
+						<option value="1">Survey No</option>
+						<option value="2">Khata No</option>
+					</select>
+				</td>
+			</tr>
+				
+				<tr>
+					<td class="tdnum" colspan="2" style="width: 50%"><b>Enter Survey No.
+							<font color="red">*</font> :
+						</b></td>
+					<td><input name="survey" style="width: 100%" disabled></td>
+				</tr>
+				<tr>
+					<td class="tdnum" colspan="2" style="width: 50%"><b>Enter Khata No.
+							<font color="red">*</font> :
+						</b></td>
+					<td><input name="kh_no" style="width: 100%" disabled></td>
+				</tr>
+							<tr>
+								<td colspan="3" align="center"><input type="submit" value="Submit" name="Submit" class="btn btn-success mt-3" />
+									<input type="button" value="Go Back" class="btn btn-success mt-3" onclick="back()">
+								</td>
+								<td colspan="3"> &numsp; </td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+	
+	<p id="displayText"></p>
+
+	<table id="customers">
+		<thead>
+			<tr>                      
+                    <th> <b> Sl.No </b> </th>
+                    <th> <b> Mandal </b> </th>
+                    <th> <b> Village </b> </th>                
+                    <th> <b> Farmer Name </b> </th>
+                    <th> <b>Father Name </b> </th>
+                    <th> <b> Owner / Cultivator </b> </th>
+                    <th> <b> Khatha Number</b> </th>
+                    <th> <b>Survey Number </b> </th>   
+                     <th> <b>Crop Name</b> </th>
+                    <th> <b> Mobile</b> </th>
+                   
+                  
+                    </tr>
+		</thead>
+		<tbody>
+   <tr th:each="cropreprt, iterStat : ${crpreprt}">
+				<td th:text="${iterStat.count}"></td>
+    <td th:text="${mname}" class="text-center"></td>
+    <td th:text="${villname}" ></td>
+    <td th:text="${cropreprt.oc_name}" class="text-center"></td>
+    <td th:text="${cropreprt.oc_fname}" class="text-center"></td>
+    <td th:text="${cropreprt.owner_tenant}" class="text-center"></td>
+    <td th:text="${kh_no}" class="text-center"></td>
+    <td th:text="${cropreprt.cr_sno}" class="text-center"></td>
+    <td th:text="${cropreprt.cropname}" class="text-center"></td>
+    <td th:text="${cropreprt.mobileno}" class="text-center"></td>
+</tr>
+
+		</tbody>
+	</table>
+<script>
+    // Function to enable/disable textbox based on dropdown selection
+    function toggleTextbox() {
+        var dropdown = document.getElementById("searchbyid");
+        var selectedValue = dropdown.value;
+        var surveyInput = document.getElementsByName("survey")[0];
+        var khataInput = document.getElementsByName("kh_no")[0];
+
+        if (selectedValue === "1") {
+            surveyInput.disabled = false;  // Enable survey input
+            khataInput.disabled = true;    // Disable khata input
+            khataInput.value = "";         // Clear khata input value
+        } else if (selectedValue === "2") {
+            surveyInput.disabled = true;   // Disable survey input
+            surveyInput.value = "";        // Clear survey input value
+            khataInput.disabled = false;   // Enable khata input
+        } else {
+            surveyInput.disabled = true;   // Disable both inputs if no valid selection
+            khataInput.disabled = true;
+            surveyInput.value = "";
+            khataInput.value = "";
+        }
+    }
+</script>
+	
+</body>
+
+</html>
+

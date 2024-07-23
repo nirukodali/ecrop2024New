@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+
+
+	</head>
+	<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+	
+	<script>
+// 	VALIDATION
+	function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    if (cropyear == "") {
+	    $('#loading').hide();
+
+        alert("Please select a Crop Year");
+        return false;
+    }
+    return true;
+}
+
+
+
+		$(document).ready(function () {
+			//alert("get crop year");
+			$.ajax({
+				type: "get",
+				url: "./util/getAllSeason",
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+					for (var j = 0; j < resp.length; j++) {
+						var bean = resp[j];
+						$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+					}
+				}
+			});
+		});
+
+		var sno = 0;
+		function getData() {
+			$("#databody").empty();
+		    $('#loading').show();
+		    if (validateForm()) {
+			var cropYear = $("#cropyear").val();
+			$.ajax({
+				type: "get",
+				url: "./util/getddapsocial?cropyear=" + cropYear,
+				cache: false,
+				timeout: 600000,
+				success: function (resp) {
+				    $('#loading').hide();
+
+					var farmername = 0, crop = 0, variety = 0,
+						extent = 0, src_irr = 0, cr_pattern = 0, sow_date = 0,
+						farming_type = 0, vaadeleted = 0, tot_corrections = 0,
+						totbookings = 0, maoapproved = 0, maorejected = 0, maoprocessed = 0,
+						tahapproved = 0, tahrejected = 0, tahprocessed = 0;
+
+					for (var j = 0; j < resp.length; j++) {
+						sno = sno + 1;
+						var bean = resp[j];
+						farmername = farmername + bean.farmername;
+						crop = crop + bean.crop;
+						variety = variety + bean.variety;
+						extent = extent + bean.extent;
+						src_irr = src_irr + bean.src_irr;
+						cr_pattern = cr_pattern + bean.cr_pattern;
+						sow_date = sow_date + bean.sow_date;
+						farming_type = farming_type + bean.farming_type;
+						vaadeleted = vaadeleted + bean.vaadeleted;
+						tot_corrections = tot_corrections + bean.tot_corrections;
+						totbookings = totbookings + bean.totbookings;
+						maoapproved = maoapproved + bean.maoapproved;
+						maorejected = maorejected + bean.maorejected;
+						maoprocessed = maoprocessed + bean.maoprocessed;
+						tahapproved = tahapproved + bean.tahapproved;
+						tahrejected = tahrejected + bean.tahrejected;
+						tahprocessed = tahprocessed + bean.tahprocessed;
+
+						$("#databody").append('<tr>'
+							+ '<td>' + sno + '</td>'
+							+ '<td>' + bean.dname + '</td>'
+							+ '<td>' + bean.farmername + '</td>'
+							+ '<td>' + bean.crop + '</td>'
+							+ '<td>' + bean.variety + '</td>'
+							+ '<td>' + bean.extent + '</td>'
+							+ '<td>' + bean.src_irr + '</td>'
+							+ '<td>' + bean.cr_pattern + '</td>'
+							+ '<td>' + bean.sow_date + '</td>'
+							+ '<td>' + bean.farming_type + '</td>'
+							+ '<td>' + bean.vaadeleted + '</td>'
+							+ '<td>' + bean.tot_corrections + '</td>'
+							+ '<td>' + bean.totbookings + '</td>'
+							+ '<td>' + bean.maoapproved + '</td>'
+							+ '<td>' + bean.maorejected + '</td>'
+							+ '<td>' + bean.maoprocessed + '</td>'
+							+ '<td>' + bean.tahapproved + '</td>'
+							+ '<td>' + bean.tahrejected + '</td>'
+							+ '<td>' + bean.tahprocessed + '</td>'
+							+ '</tr>');
+					}
+					$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2x">TOTAL<b></b></td>'
+						+ '<td>' + farmername + '</td>'
+						+ '<td>' + crop + '</td>'
+						+ '<td>' + variety + '</td>'
+						+ '<td>' + extent + '</td>'
+						+ '<td>' + src_irr + '</td>'
+						+ '<td>' + cr_pattern + '</td>'
+						+ '<td>' + sow_date + '</td>'
+						+ '<td>' + farming_type + '</td>'
+						+ '<td>' + vaadeleted + '</td>'
+						+ '<td>' + tot_corrections + '</td>'
+						+ '<td>' + totbookings + '</td>'
+						+ '<td>' + maoapproved + '</td>'
+						+ '<td>' + maorejected + '</td>'
+						+ '<td>' + maoprocessed + '</td>'
+						+ '<td>' + tahapproved + '</td>'
+						+ '<td>' + tahrejected + '</td>'
+						+ '<td>' + tahprocessed + '</td>'
+
+						+ '</tr>')
+				}
+			});
+		}
+	}
+	</script>
+	<style>
+		table thead {
+			background-color: grey;
+		}
+	</style>
+
+	<body>
+		<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b>District Wise Social Audit Grievance Redressed Report</b>
+		</div>
+		<br>
+		<!-- LoadingSpinner -->	
+		<div id="loading" style="display: none;">
+       	Loading...
+		</div>
+		
+		<div align="center">
+			<form>
+				<table id="ObjEntryTable">
+					<tr>
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="right" width="30%"><b>Crop Year</b></td>
+
+						<td align="left">
+							<select id="cropyear" name="cropyear" style="width: 200px">
+							<option value="">----Select----</option></select>
+						</td>
+					</tr>
+				</table>
+				<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+					<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+						onclick="return getData();">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div>
+			<form method="post">
+				<div align="center" id="divPrint" class="table table-hover">
+					<table id="tableStkId" align="center">
+						<thead style="color: white;">
+							<tr>
+								<th> <b> Sl.No </b> </th>
+								<th> <b> District Name </b> </th>
+								<!--                       <th> <b> Tot Super check Rejected</b> </th>-->
+								<th> <b> Farmer Name </b> </th>
+								<th> <b> Crop Name </b> </th>
+								<th> <b> Variety Name </b> </th>
+								<th> <b> Area Sown </b> </th>
+								<!--                        <th> <b> Crop Sequence </b> </th>-->
+								<th> <b> Irrigation Source</b> </th>
+								<th> <b> Crop Pattern </b> </th>
+								<th> <b> Sown Date </b> </th>
+								<th> <b> Farming Type </b> </th>
+								<th> <b> VAA Deleted </b> </th>
+								<th> <b> Total Corrections Attempted </b> </th>
+								<th> <b> Total Bookings </b> </th>
+								<th> <b> No.of Bookings MAO Approved </b> </th>
+								<th> <b> No.of Bookings MAO Rejected </b> </th>
+								<th> <b> Total No.of Bookings MAO Processed </b> </th>
+								<th> <b> Total No.of Bookings Tahsildar Approved </b> </th>
+								<th> <b> Total No.of Bookings Tahsildar Rejected </b> </th>
+								<th> <b> Total No.of Bookings Tahsildar Processed </b> </th>
+							</tr>
+						</thead>
+						<tbody id="databody">
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div align="center" style="color:black">
+				<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+					id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+				<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')"
+					value="Excel">
+				<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

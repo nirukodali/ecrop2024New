@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<style>
+		#loading {
+    	position: fixed;
+    	top: 60%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	padding: 20px;
+    	border-radius: 5px;
+	}
+	</style>
+	
+<script>
+//	VALIDATION
+function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    // Check if district is selected
+    if (cropyear == "") {
+        alert("Please select a Crop Year");
+        return false;
+    }
+
+    // Add more validations here if needed
+
+    return true;
+}
+
+
+	$(document).ready(function () {
+		$("#loading").hide();
+		$.ajax({
+			type: "get",
+			url: "./util/getAllSeason",
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				for (var j = 0; j < resp.length; j++) {
+					var bean = resp[j];
+					$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+				}
+			}
+		});
+	});
+
+	
+	function getData() {
+	    $('#loading').show();
+		$("#databody").empty();
+		var sno = 0;
+		 if (validateForm()) {
+		var cropYear = $("#cropyear").val();
+		$.ajax({
+			type: "get",
+			url: "./util/disttab?cropyear=" + cropYear,
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				$("#loading").hide();
+				
+				var totrevvill = 0,totprepareddatavill = 0,tabdownloadedvill = 0,totallps = 0,totlps_downloaded = 0,a = 0;
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+					var bean = resp[j];
+					
+					totrevvill = totrevvill + bean.totrevvill;
+					totprepareddatavill = totprepareddatavill + bean.totprepareddatavill;
+					tabdownloadedvill = tabdownloadedvill + bean.tabdownloadedvill;
+					totallps = totallps + bean. totallps;
+					totlps_downloaded =  totlps_downloaded + bean.totlps_downloaded;
+					a = a + (bean.totallps - bean.totlps_downloaded)
+					
+
+					$("#databody").append('<tr>'
+						+ '<td>' + sno + '</td>'
+						+ '<td>' + '<a href="./disttabmand?wbdcode=' + bean.wbdcode + '&cropyear=' + cropYear + '">' + bean.dname + '</a>' + '</td>'
+						+ '<td>' + bean.totrevvill + '</td>'
+						+ '<td>' + bean.totprepareddatavill + '</td>'
+						+ '<td>' +  bean.tabdownloadedvill + '</td>'
+						+ '<td>' + bean.totallps + '</td>'
+						+ '<td>' + bean.totlps_downloaded + '</td>'
+						+ '<td>' + (bean.totallps - bean.totlps_downloaded) + '</td>'
+
+						+ '</tr>');
+				}
+				$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2">TOTAL<b></b></td>'
+						+ '<td>' + totrevvill + '</td>'
+						+ '<td>' + totprepareddatavill + '</td>'
+						+ '<td>' + tabdownloadedvill + '</td>'
+						+ '<td>' + totallps + '</td>'
+						+ '<td>' + totlps_downloaded + '</td>'
+						+ '<td>' + a + '</td>'
+
+						+ '</tr>')
+
+			}
+		});
+	}
+}
+</script>
+<style>
+	table thead {
+    background-color: grey;
+}
+</style>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> District Wise Status Report On Preparation Of Land Data<br>And Downloaded to Tab</b>
+	</div>
+<br>
+
+<div id="loading" style="display: none;">
+       	Loading...
+		</div>\
+		
+	<div align="center">
+<!-- 		<form> -->
+			<table id="ObjEntryTable">
+				<tr>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td align="right" width="30%"><b>Crop Year</b></td>
+
+					<td align="left">
+						<select id="cropyear" name="cropyear" style="width: 200px">
+						<option value="">----Select----</option></select>
+					</td>
+				</tr>
+			</table>
+			<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+					onclick="return getData();">Submit</button>
+			</div>
+<!-- 		</form> -->
+	</div>
+	<div class="container">
+		<form  name="unlockreport" method="post" action="./distmand">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+					<thead style="color: white;">
+						 <tr>
+                        	<th>Sno</th>
+                        	<th> District </th>
+                        	<th> Total Revenue</br> Villages </th>  
+                        	<th> Total Villages </br> MAO Allotted </br>Survey Nos </th> 
+                        	<th>Total Villages</br>Data </br>Downloaded to Tab</th>                        
+                        	<th> Total Land Parcels </th>
+                        	<th> Total Land Parcels </br> Downloaded to Tab</th>
+                        	<th>Balance Land Parcels  </br>To be Downloaded</th>
+                    	</tr>
+					</thead>
+					<tbody id="databody">
+						
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

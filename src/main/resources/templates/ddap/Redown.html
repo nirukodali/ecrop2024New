@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+</head>
+<script>
+	$(document).ready(
+			function() {
+				$.ajax({
+					type : "get",
+					url : "./util/getAllSeason",
+					cache : false,
+					timeout : 600000,
+					success : function(resp) {
+						for (var j = 0; j < resp.length; j++) {
+							var bean = resp[j];
+							$("#cropyear").append(
+									'<option value="' + bean.col1 + '">'
+											+ bean.col2 + '</option>');
+						}
+					}
+				});
+			});
+
+	function getData() {
+		var sno = 0;
+		$("#databody").empty();
+		var cropYear = $("#cropyear").val();
+		var inputdcode = $("#inputdcode").val();
+		$.ajax({
+			type : "post",
+			// 				url: "./util/getredown?cropyear=" + cropYear + "&dcode=" + inputdcode,.
+			url : "./util/getredown?cropyear=" + cropYear,
+			headers : {
+				"X-Dcode" : inputdcode
+			},
+			cache : false,
+			timeout : 600000,
+			success : function(resp) {
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+					var bean = resp[j];
+					$("#databody").append(
+							'<tr>' + '<td>' + sno + '</td>' + '<td>'
+									+ bean.wbdname + '</td>' + '<td>'
+									+ bean.wbmname + '</td>' + '<td>'
+									+ bean.wbvname + '</td>' + '<td>'
+									+ bean.downloadcount + '</td>' + '</tr>');
+				}
+			}
+		});
+	}
+</script>
+
+<body>
+	<div class="heading" style="text-align: center; font-size: 150%;">
+		<b>Redownloaded Count</b>
+	</div>
+	<br>
+
+	<div align="center">
+		<div class="tdnum">
+			<b> &numsp;&numsp;&numsp;&numsp;&numsp; Crop Year <font
+				color="red">*</font></b>&numsp; <select id="cropyear" name="cropyear"
+				style="width: 200px">
+				<option value="">----Select----</option>
+			</select>
+		</div>
+		<br>
+
+
+		<div class="tdnum">
+			<b> &numsp;&numsp;&numsp;&numsp;&numsp; District <font
+				color="red">*</font></b>&numsp; <select name="selectedDist"
+				id="inputdcode" style="width: 200px; text-align: left;">
+				<option value="">----Select----</option>
+				<option th:each="list : ${dist}" th:value="${list.dcode}"
+					th:text="${list.dname}"></option>
+			</select>
+		</div>
+
+		<div colspan="3" align="center"
+			style="padding-top: 10px; padding-bottom: 10px;">
+			<button type="button" id="btnSubmit" class="btn btn-primary"
+				value="Submit" onclick="getData()">Submit</button>
+		</div>
+	</div>
+
+
+
+
+	<div>
+		<form method="post">
+			<div align="center" id="divPrint" class="table table-hover ">
+				<table style="width: 50%;">
+					<thead>
+						<tr>
+							<th><b> S.No </b></th>
+							<th><b> District </b></th>
+							<th><b> Mandal </b></th>
+							<th><b> Village </b></th>
+							<th><b> Download Count </b></th>
+						</tr>
+					</thead>
+					<tbody id="databody"></tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+
+	<div align="center">
+		<a th:href="@{/}"> Back</a>
+	</div>
+</body>
+
+</html>

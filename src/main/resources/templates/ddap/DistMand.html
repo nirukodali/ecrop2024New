@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Mandal Wise Status Report On Preparation Of Land Data<br>And Downloaded to Tab</b>
+	</div>
+<br>
+
+<div id="loading" style="display: none;">
+       	Loading...
+		</div>\
+		
+	<div class="container">
+		<form  name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+					<thead>
+						 <tr>
+                        	<th>Sno</th>
+                        	<th> Mandal </th>
+                        	<th> Total Revenue</br> Villages </th>  
+                        	<th> Total Villages </br> MAO Allotted </br>Survey Nos </th> 
+                        	<th> Total Villages</br>Data </br>Downloaded to Tab</th>                        
+                        	<th> Total Land Parcels </th>
+                        	<th> Total Land Parcels </br> Downloaded to Tab</th>
+                        	<th> Balance Land Parcels  </br>To be Downloaded</th>
+                    	</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item ,stat: ${list}">
+							<td align="center" th:text="${stat.index + 1}">1</td>
+							<td align="left"> <a th:href="@{'/disttabvill?wbdcode=' + ${item.wbdcode} + '&cropyear=' + ${cropyear} + '&wbmcode=' + ${item.wbmcode}}"
+   th:text="${item.mname}"></a></td>
+							
+<!-- 							<a th:href="@{'/disttabvill?wbmcode=' + ${item.wbmcode} + '&wbdcode=' + ${item.wbdcode} + '&cropyear=' + ${cropyear} }" -->
+<!-- 								   th:text="${item.mname}"></a> -->
+							<td align="left" th:text="${item.totrevvill}"></td>
+							<td align="left" th:text="${item.totprepareddatavill}"></td>
+							<td align="right" th:text="${item.tabdownloadedvill}"></td>
+							<td align="right" th:text="${item.totallps}"></td>
+							<td align="right" th:text="${item.lps_downloaded}"></td>
+<!-- 							<td align="right" th:text="${mandlist.Unsurveyed_Inam}"></td> -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+</body>
+
+</html>

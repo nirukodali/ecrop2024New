@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="header"></head>
+
+<body>
+	<div th:insert="headerImage"></div>
+
+	<div th:insert="navBarTop"></div>
+	<div th:insert="headerMessage"></div>
+	
+
+</head>
+<script>
+//	VALIDATION
+function validateForm() {
+    var cropyear = document.getElementById("cropyear").value;
+
+    // Check if district is selected
+    if (cropyear == "") {
+        alert("Please select a Crop Year");
+        return false;
+    }
+
+    // Add more validations here if needed
+
+    return true;
+}
+
+
+	$(document).ready(function () {
+		$("#loadingsign").hide();
+		//alert("get crop year");
+		$.ajax({
+			type: "get",
+			url: "./util/getAllSeason",
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				//alert(JSON.stringify(resp));
+				for (var j = 0; j < resp.length; j++) {
+					var bean = resp[j];
+					$("#cropyear").append('<option value="' + bean.col1 + '">' + bean.col2 + '</option>');
+// 					$("#cropyear").append('<option value="' + resp[j].col1 + '">' + resp[j].col2 + '</option>');
+				}
+			}
+		});
+	});
+
+	
+	function getData() {
+		$("#loadingsign").show();
+		$("#databody").empty();
+		var sno = 0;
+		 if (validateForm()) {
+		var cropYear = $("#cropyear").val();
+		//alert("cropYear=============>" + cropYear);
+		$.ajax({
+			type: "get",
+			url: "./util/getbookext?cropyear=" + cropYear,
+			cache: false,
+			timeout: 600000,
+			success: function (resp) {
+				$("#loadingsign").hide();
+				//alert(JSON.stringify(resp));
+				
+				var mappedextent = 0,vaaselectedext = 0,bookedextent = 0;
+				
+				for (var j = 0; j < resp.length; j++) {
+					sno = sno + 1;
+					var bean = resp[j];
+					mappedextent = mappedextent + parseFloat(bean.mappedextent);
+					mappedextent1 = mappedextent.toFixed(2);
+					
+					vaaselectedext = vaaselectedext + parseFloat(bean.vaaselectedext);
+					vaaselectedext1 = vaaselectedext.toFixed(2);
+
+					bookedextent = bookedextent + parseFloat(bean.bookedextent);
+					bookedextent1 = bookedextent.toFixed(2);
+
+					
+					$("#databody").append('<tr>'
+						+ '<td>' + sno + '</td>'
+						+ '<td>' + bean.wbedname + '</td>'
+						+ '<td>' + bean.mappedextent + '</td>'
+						+ '<td>' + bean.vaaselectedext + '</td>'
+						+ '<td>' + bean.bookedextent + '</td>'
+						+ '</tr>');
+				}
+				$("#databody").append('<tr style="fontsize:200px; font-weight: bold;">'
+						+ '<td colspan = "2x">TOTAL<b></b></td>'
+						+ '<td>' + mappedextent1 + '</td>'
+						+ '<td>' + vaaselectedext1 + '</td>'
+						+ '<td>' + bookedextent1 + '</td>'
+
+						+ '</tr>')
+			}
+		});
+	}
+}
+</script>
+<style>
+	table thead {
+    background-color: grey;
+}
+</style>
+<body>
+	<div class="heading" colspan="20" style="text-align:center;background-color: white;font-size: 20px;"><b> Data Source Wise Extent And Booking Report</b>
+	</div>
+<br>
+<!-- LoadingSpinner -->	
+	<div id="loadingsign">
+	<div class="d-flex justify-content-center" >
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+	</div>
+  
+</div>
+	<div align="center">
+		<form>
+			<table id="ObjEntryTable">
+				<tr>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td align="right" width="30%"><b>Crop Year</b></td>
+
+					<td align="left">
+						<select id="cropyear" name="cropyear" style="width: 200px">
+						<option value="">----Select----</option></select>
+					</td>
+				</tr>
+			</table>
+			<div colspan="3" align="center" style="padding-top:10px;padding-bottom:10px;">
+				<button type="button" id="btnSubmit" class="btn btn-primary" value="Submit"
+					onclick="return getData();">Submit</button>
+			</div>
+		</form>
+	</div>
+	<div class="container">
+		<form  name="unlockreport" method="post">
+			<div align="center" id="divPrint" class="table table-hover">
+				<table id="tableStkId" align="center" class="table table-striped border border-secondary">
+					<thead style="color: white;">
+						<tr>
+							<th> <b> S.No. </b> </th>
+							<th> <b>District</b> </th>
+							<th> <b>Mapped Extent </b> </th>
+							<th> <b>VAA Selected Extent</b> </th>
+							<th> <b>Booked Extent</b> </th>
+						</tr>
+					</thead>
+					<tbody id="databody">
+						
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div align="center" style="color:black">
+			<input class="btn btn-primary" name="ctl00$ContentPlaceHolder1$btnPrint" type="button"
+				id="ctl00_ContentPlaceHolder1_btnPrint" onClick="javascript:CallPrint('divPrint')" value="Print">
+			<input class="btn btn-primary" type="button" onclick="tableToExcel('tableStkId', 'Abstract')" value="Excel">
+			<!--			<input  class="btn btn-primary" type="button" value="Back" onclick="goBack()" />-->
+		</div>
+	</div>
+	</div>
+</body>
+
+</html>
